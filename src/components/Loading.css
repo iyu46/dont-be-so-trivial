@@ -1,0 +1,32 @@
+.Loading {
+  text-align: center;
+}
+
+.Loading-logo {
+  height: 20vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .Loading-logo {
+    animation: Loading-logo-spin infinite 1s linear;
+  }
+}
+
+.Loading-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes Loading-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+

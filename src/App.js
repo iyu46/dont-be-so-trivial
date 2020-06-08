@@ -1,23 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Suspense, lazy } from 'react';
 import './App.css';
+import { Route, Switch } from "react-router-dom";
+import Loading from "./components/Loading";
+
+const Home = lazy(() => import('./components/Home'));
+const GenerateRoom = lazy(() => import('./components/setup/GenerateRoom'));
+const JoinGame = lazy(() => import('./components/setup/JoinGame'));
+const Room = lazy(() => import('./components/setup/Room'));
 
 function App() {
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <Suspense fallback={<Loading />}>
+          <Switch>
+            <Route path="/" component={Home} exact />
+            <Route path="/generate" component={GenerateRoom} exact />
+            <Route path="/join" component={JoinGame} exact />
+            <Route path="/game/:code" component={Room}/>
+          </Switch>
+        </Suspense>
       </header>
     </div>
   );
