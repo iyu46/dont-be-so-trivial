@@ -1,0 +1,38 @@
+{
+  "files": {
+    "static/js/0.b92fd181.chunk.js": "/dont-be-so-trivial/static/js/0.b92fd181.chunk.js",
+    "static/js/0.b92fd181.chunk.js.map": "/dont-be-so-trivial/static/js/0.b92fd181.chunk.js.map",
+    "main.css": "/dont-be-so-trivial/static/css/main.b2fe3987.chunk.css",
+    "main.js": "/dont-be-so-trivial/static/js/main.228b8b04.chunk.js",
+    "main.js.map": "/dont-be-so-trivial/static/js/main.228b8b04.chunk.js.map",
+    "runtime-main.js": "/dont-be-so-trivial/static/js/runtime-main.e80b9f21.js",
+    "runtime-main.js.map": "/dont-be-so-trivial/static/js/runtime-main.e80b9f21.js.map",
+    "static/js/3.1990184d.chunk.js": "/dont-be-so-trivial/static/js/3.1990184d.chunk.js",
+    "static/js/3.1990184d.chunk.js.map": "/dont-be-so-trivial/static/js/3.1990184d.chunk.js.map",
+    "static/js/4.1b93841d.chunk.js": "/dont-be-so-trivial/static/js/4.1b93841d.chunk.js",
+    "static/js/4.1b93841d.chunk.js.map": "/dont-be-so-trivial/static/js/4.1b93841d.chunk.js.map",
+    "static/js/5.3bcaab83.chunk.js": "/dont-be-so-trivial/static/js/5.3bcaab83.chunk.js",
+    "static/js/5.3bcaab83.chunk.js.map": "/dont-be-so-trivial/static/js/5.3bcaab83.chunk.js.map",
+    "static/js/6.10202440.chunk.js": "/dont-be-so-trivial/static/js/6.10202440.chunk.js",
+    "static/js/6.10202440.chunk.js.map": "/dont-be-so-trivial/static/js/6.10202440.chunk.js.map",
+    "static/js/7.95e98c6c.chunk.js": "/dont-be-so-trivial/static/js/7.95e98c6c.chunk.js",
+    "static/js/7.95e98c6c.chunk.js.map": "/dont-be-so-trivial/static/js/7.95e98c6c.chunk.js.map",
+    "static/js/8.14d5c77f.chunk.js": "/dont-be-so-trivial/static/js/8.14d5c77f.chunk.js",
+    "static/js/8.14d5c77f.chunk.js.map": "/dont-be-so-trivial/static/js/8.14d5c77f.chunk.js.map",
+    "static/js/9.37c587b8.chunk.js": "/dont-be-so-trivial/static/js/9.37c587b8.chunk.js",
+    "static/js/9.37c587b8.chunk.js.map": "/dont-be-so-trivial/static/js/9.37c587b8.chunk.js.map",
+    "index.html": "/dont-be-so-trivial/index.html",
+    "precache-manifest.4334b1e8a483a3e477833bee52f07e38.js": "/dont-be-so-trivial/precache-manifest.4334b1e8a483a3e477833bee52f07e38.js",
+    "service-worker.js": "/dont-be-so-trivial/service-worker.js",
+    "static/css/main.b2fe3987.chunk.css.map": "/dont-be-so-trivial/static/css/main.b2fe3987.chunk.css.map",
+    "static/js/0.b92fd181.chunk.js.LICENSE.txt": "/dont-be-so-trivial/static/js/0.b92fd181.chunk.js.LICENSE.txt",
+    "static/js/3.1990184d.chunk.js.LICENSE.txt": "/dont-be-so-trivial/static/js/3.1990184d.chunk.js.LICENSE.txt",
+    "static/media/loading.svg": "/dont-be-so-trivial/static/media/loading.1b923fe7.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e80b9f21.js",
+    "static/js/3.1990184d.chunk.js",
+    "static/css/main.b2fe3987.chunk.css",
+    "static/js/main.228b8b04.chunk.js"
+  ]
+}

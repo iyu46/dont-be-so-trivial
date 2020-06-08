@@ -1,0 +1,2 @@
+(this["webpackJsonpdont-be-so-trivial"]=this["webpackJsonpdont-be-so-trivial"]||[]).push([[9],{79:function(e,t,n){"use strict";n.r(t);var r=n(0),a=n.n(r),c=n(73),i=n(1),o=Object(c.a)((function(e){return{link:{color:"#61dafb"}}}));t.default=function(e){var t=Object(i.g)().code;return o(),a.a.createElement("div",null,a.a.createElement("h1",null,"Current game code is ",t))}}}]);
+//# sourceMappingURL=9.37c587b8.chunk.js.map
