@@ -21,7 +21,7 @@ function GenerateRoom(props) {
     //    roomCodeGen = generate_random_string(4);
     // } while (database.sessionExists(roomCodeGen));
     let roomCodeGen = generate_random_string(4);
-    let redirectLink = "/game/" + roomCodeGen;
+    let redirectLink = "/room/" + roomCodeGen;
 
     return (
         <div>

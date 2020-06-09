@@ -7,6 +7,7 @@ const Home = lazy(() => import('./components/Home'));
 const GenerateRoom = lazy(() => import('./components/setup/GenerateRoom'));
 const JoinGame = lazy(() => import('./components/setup/JoinGame'));
 const Room = lazy(() => import('./components/setup/Room'));
+const Game = lazy(() => import('./components/Game'));
 
 function App() {
 
@@ -18,7 +19,8 @@ function App() {
             <Route path="/" component={Home} exact />
             <Route path="/generate" component={GenerateRoom} exact />
             <Route path="/join" component={JoinGame} exact />
-            <Route path="/game/:code" component={Room}/>
+            <Route path="/room/:code" component={Room}/>
+            <Route path="/game/:code" component={Game}/>
           </Switch>
         </Suspense>
       </header>

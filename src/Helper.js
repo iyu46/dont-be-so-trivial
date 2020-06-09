@@ -15,8 +15,7 @@ const getSessionMembers = async (room) => {
             value: [
                 'Nik',
                 'Siena',
-                'Filip',
-                'Ramon'
+                'Filip'
             ]
         }
     });
