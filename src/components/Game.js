@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import GrabBag from './game/GrabBag';
+import Quickstarter from './game/Quickstarter';
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 
 function Game(props) {
     const classes = useStyles();
-    const minigame = <GrabBag/>;
+    const minigame = <Quickstarter/>;
 
     return (
         <div>
