@@ -33,6 +33,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+function decodeEntities(text) {
+    var str = decodeURIComponent(text).replace("%2C", ",");
+
+    return str;
+}
+
 function Quickstarter(props) {
     const classes = useStyles();
     const [questions, setQuestions] = useState([]);
@@ -42,8 +48,15 @@ function Quickstarter(props) {
 
     const handleClick = (ansIndex) => {
         setShowAnswer(true);
-        setCorrectAnswer(questions[currQuestion].answers.indexOf(questions[currQuestion].correct_answer));
-        if (questions[currQuestion].answers[ansIndex] === questions[currQuestion].correct_answer) {
+        setCorrectAnswer((questions[currQuestion].answers.indexOf(decodeEntities(questions[currQuestion].correct_answer))));
+
+        // console.table(questions);
+        // console.log("currque:" + currQuestion);
+        console.log("correct:" + correctAnswer);
+        console.log("question: " + decodeEntities(questions[currQuestion].answers[ansIndex]));
+        console.log("answer: " + decodeEntities(questions[currQuestion].correct_answer));
+
+        if (decodeEntities(questions[currQuestion].answers[ansIndex]) === decodeEntities(questions[currQuestion].correct_answer)) {
             console.log("correct");
             // TODO: Send to server to record points
         } else {
@@ -89,12 +102,12 @@ function Quickstarter(props) {
             <div style={{ width: '100%', height: '30%'}}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer == 0 ? classes.correctQuestionCard : classes.questionCard}>
+                        <Card className={showAnswer && correctAnswer === 0 ? classes.correctQuestionCard : classes.questionCard}>
                             <Button className={classes.questionText} onClick={() => handleClick(0)}>{questions[currQuestion].answers[0]}</Button>
                         </Card>
                     </Grid>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer == 1 ? classes.correctQuestionCard : classes.questionCard}>
+                        <Card className={showAnswer && correctAnswer === 1 ? classes.correctQuestionCard : classes.questionCard}>
                             <Button className={classes.questionText} onClick={() => handleClick(1)}>{questions[currQuestion].answers[1]}</Button>
                         </Card>
                         </Grid>
@@ -104,13 +117,13 @@ function Quickstarter(props) {
             <div style={{ width: '100%', height: '30%' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer == 2 ? classes.correctQuestionCard : classes.questionCard}>
-                            <Button className={classes.questionText} onClick={() => handleClick(questions[currQuestion].answers[2])}>{questions[currQuestion].answers[2]}</Button>
+                        <Card className={showAnswer && correctAnswer === 2 ? classes.correctQuestionCard : classes.questionCard}>
+                            <Button className={classes.questionText} onClick={() => handleClick(2)}>{questions[currQuestion].answers[2]}</Button>
                         </Card>
                     </Grid>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer == 3 ? classes.correctQuestionCard : classes.questionCard}>
-                            <Button className={classes.questionText} onClick={() => handleClick(questions[currQuestion].answers[3])}>{questions[currQuestion].answers[3]}</Button>
+                        <Card className={showAnswer && correctAnswer === 3 ? classes.correctQuestionCard : classes.questionCard}>
+                            <Button className={classes.questionText} onClick={() => handleClick(3)}>{questions[currQuestion].answers[3]}</Button>
                         </Card>
                     </Grid>
                 </Grid>
