@@ -37,8 +37,8 @@ function Game(props) {
         <div>
             {minigame}
             <Grid container spacing={3}>
-                {players.map(player => 
-                    <Grid item xs={3}>
+                {players.map((player, i) => 
+                    <Grid item xs={3} key={i}>
                         <Card>{player}</Card>
                     </Grid>
                 )}
