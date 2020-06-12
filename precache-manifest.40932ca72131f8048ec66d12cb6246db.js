@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "03f59bb7500321fb3bc9de63f2888a40",
+    "revision": "7e62a750202136af192e0d9d65129e4c",
     "url": "/dont-be-so-trivial/index.html"
   },
   {
-    "revision": "cc163e26f3cffe758ac2",
-    "url": "/dont-be-so-trivial/static/css/main.4c0a0c28.chunk.css"
+    "revision": "2ecda4e81bc962c7993a",
+    "url": "/dont-be-so-trivial/static/css/main.b2fe3987.chunk.css"
   },
   {
     "revision": "0c198c4389d3261d34e3",
@@ -44,24 +44,24 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dont-be-so-trivial/static/js/6.c46b9b69.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "3c871b8ba0503571d9f3",
-    "url": "/dont-be-so-trivial/static/js/7.2a713a2b.chunk.js"
+    "revision": "011193bef0cb7036c88a",
+    "url": "/dont-be-so-trivial/static/js/7.8e676329.chunk.js"
   },
   {
-    "revision": "a5dd208842158d230203",
-    "url": "/dont-be-so-trivial/static/js/8.04e3c76a.chunk.js"
+    "revision": "ab934014985acb7860a3",
+    "url": "/dont-be-so-trivial/static/js/8.8131cc16.chunk.js"
   },
   {
     "revision": "bd1000d13b9af4a0f167",
     "url": "/dont-be-so-trivial/static/js/9.4521701e.chunk.js"
   },
   {
-    "revision": "cc163e26f3cffe758ac2",
+    "revision": "2ecda4e81bc962c7993a",
     "url": "/dont-be-so-trivial/static/js/main.b1711d68.chunk.js"
   },
   {
-    "revision": "1dcd881e9efcfe8f4f43",
-    "url": "/dont-be-so-trivial/static/js/runtime-main.c9f140ca.js"
+    "revision": "872c8997b2362059749e",
+    "url": "/dont-be-so-trivial/static/js/runtime-main.84af266c.js"
   },
   {
     "revision": "1b923fe76b7aa232bd60fce7caa47373",
