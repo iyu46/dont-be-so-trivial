@@ -18,7 +18,14 @@ const categories = {
     'History': 23,
     'Politics': 24,
     'Art': 25,
-    'Celebrities': 26
+    'Celebrities': 26,
+    'Animals': 27,
+    'Vehicles': 28,
+    'Comics': 29,
+    'Gadgets': 30,
+    'Japanese Anime & Manga': 31,
+    'Cartoon & Animation': 32
+
 };
 
 // Open Trivia API Calls
