@@ -35,7 +35,9 @@ function Game(props) {
 
     return (
         <div>
+            <div style={{width: '80vw'}}>
             {minigame}
+            </div>
             <Grid container spacing={3}>
                 {players.map((player, i) => 
                     <Grid item xs={3} key={i}>

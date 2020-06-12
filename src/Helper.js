@@ -60,6 +60,14 @@ function randomInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+const getCategoryOptions = (numOptions) => {
+    var options = new Set();
+    while (options.size !== numOptions) {
+        options.add(Object.keys(categories).find(key => categories[key] === randomInteger(9, 32)));
+    }
+    return options;
+}
+
 // Mock API helper functions
 const joinRoom = async (name, room) => {
     //call server, try to add person to room
@@ -84,6 +92,7 @@ const getSessionMembers = async (room) => {
 
 export {
     getTriviaQuestions,
+    getCategoryOptions,
     joinRoom,
     getSessionMembers
 };

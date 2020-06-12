@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Card, Typography } from '@material-ui/core';
-import { getTriviaQuestions } from '../../Helper';
+import { getTriviaQuestions, getCategoryOptions } from '../../Helper';
+import GameButton from '../ui/GameButton';
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -16,7 +17,6 @@ const useStyles = makeStyles(theme => ({
         },
     },
     questionGrid: {
-        height: 150
     },
     questionCard: {
         height: '100%',
@@ -85,6 +85,8 @@ function Quickstarter(props) {
         
     }
 
+
+
     /*useEffect(() => {
         const tick = setTimeout(() => {
             populateDisplayQuestions();
@@ -93,6 +95,7 @@ function Quickstarter(props) {
     })*/
     useEffect(() => {
         populateDisplayQuestions();
+
     }, []);
 
     return (
@@ -102,29 +105,33 @@ function Quickstarter(props) {
             <div style={{ width: '100%', height: '30%'}}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer === 0 ? classes.correctQuestionCard : classes.questionCard}>
+                        {/* <Card className={showAnswer && correctAnswer === 0 ? classes.correctQuestionCard : classes.questionCard}>
                             <Button className={classes.questionText} onClick={() => handleClick(0)}>{questions[currQuestion].answers[0]}</Button>
-                        </Card>
+                        </Card> */}
+                        <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={0} buttonText={questions[currQuestion].answers[0]} onClick={() => handleClick(0)}></GameButton>
                     </Grid>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer === 1 ? classes.correctQuestionCard : classes.questionCard}>
+                        {/* <Card className={showAnswer && correctAnswer === 1 ? classes.correctQuestionCard : classes.questionCard}>
                             <Button className={classes.questionText} onClick={() => handleClick(1)}>{questions[currQuestion].answers[1]}</Button>
-                        </Card>
-                        </Grid>
+                        </Card> */}
+                        <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={1} buttonText={questions[currQuestion].answers[1]} onClick={() => handleClick(1)}></GameButton>
+                    </Grid>
                 </Grid>
             </div>
             <Typography variant='h4' style={{padding: 40}}>{questions[currQuestion].question}</Typography>
             <div style={{ width: '100%', height: '30%' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer === 2 ? classes.correctQuestionCard : classes.questionCard}>
+                        {/* <Card className={showAnswer && correctAnswer === 2 ? classes.correctQuestionCard : classes.questionCard}>
                             <Button className={classes.questionText} onClick={() => handleClick(2)}>{questions[currQuestion].answers[2]}</Button>
-                        </Card>
+                        </Card> */}
+                        <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={2} buttonText={questions[currQuestion].answers[2]} onClick={() => handleClick(2)}></GameButton>
                     </Grid>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        <Card className={showAnswer && correctAnswer === 3 ? classes.correctQuestionCard : classes.questionCard}>
+                        {/* <Card className={showAnswer && correctAnswer === 3 ? classes.correctQuestionCard : classes.questionCard}>
                             <Button className={classes.questionText} onClick={() => handleClick(3)}>{questions[currQuestion].answers[3]}</Button>
-                        </Card>
+                        </Card> */}
+                        <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={3} buttonText={questions[currQuestion].answers[3]} onClick={() => handleClick(3)}></GameButton>
                     </Grid>
                 </Grid>
             </div>
