@@ -30,14 +30,19 @@ const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='m
     if (difficulty) {
         url += `&difficulty=${difficulty}`;
     }
-    url += `&type=${type}`;
+    url += `&type=${type}&encode=url3986`;
     var response = await axios.get(url);
-    var results = response.data.results;
+
     // TODO: This will be done on the server side and return a DTO
+    var results = response.data.results;
     for (var i = 0; i < results.length; i++) {
+        results[i].question = decodeURIComponent(results[i].question);
+        results[i].answers = [];
         var randomInsertIndex = randomInteger(0, 2);
-        results[i].answers = results[i].incorrect_answers;
-        results[i].answers.splice(randomInsertIndex, 0, results[i].correct_answer);
+        for (var j = 0; j < results[i].incorrect_answers.length; j++) {
+            results[i].answers.push(decodeURIComponent(results[i].incorrect_answers[j]));
+        }
+        results[i].answers.splice(randomInsertIndex, 0, decodeURIComponent(results[i].correct_answer));
     }
     response.data.results = results;
     return Promise.resolve(response);

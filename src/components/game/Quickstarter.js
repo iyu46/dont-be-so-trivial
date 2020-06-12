@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, Grid, Card, Typography } from '@material-ui/core';
 import { getTriviaQuestions } from '../../Helper';
 
 const useStyles = makeStyles(theme => ({
@@ -14,7 +14,18 @@ const useStyles = makeStyles(theme => ({
             fontWeight: 'bold',
             textDecoration: 'none',
         },
-      },
+    },
+    questionGrid: {
+        height: 150
+    },
+    questionCard: {
+        height: '100%',
+        width: '100%',
+    },
+    questionText: {
+        height: '100%',
+        width: '100%'
+    }
 }));
 
 function Quickstarter(props) {
@@ -47,6 +58,13 @@ function Quickstarter(props) {
         setQuestions(results);
         
     }
+
+    /*useEffect(() => {
+        const tick = setTimeout(() => {
+            populateDisplayQuestions();
+        }, 2000);
+        //return () => clearInterval(tick)
+    })*/
     useEffect(() => {
         populateDisplayQuestions();
     }, []);
@@ -54,14 +72,37 @@ function Quickstarter(props) {
     return (
         <div>
             { questions.length > 0 ?
-            <div>
-                { questions[currQuestion].question }
-                {questions[currQuestion].answers.map((ans, i) => {
-                    return (
-                        <Button variant="contained" key={i} onClick={() => handleClick(ans)}>{ans}</Button>
-                    )
-                })}
-                </div>
+            <>
+            <div style={{ width: '100%', height: '30%'}}>
+                <Grid container spacing={2}>
+                    <Grid item xs={6} className={classes.questionGrid}>
+                        <Card className={classes.questionCard}>
+                            <Button className={classes.questionText} onClick={() => handleClick(questions[currQuestion].answers[0])}>{questions[currQuestion].answers[0]}</Button>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={6} className={classes.questionGrid}>
+                        <Card className={classes.questionCard}>
+                            <Button className={classes.questionText} onClick={() => handleClick(questions[currQuestion].answers[1])}>{questions[currQuestion].answers[1]}</Button>
+                        </Card>
+                        </Grid>
+                </Grid>
+            </div>
+            <Typography variant='h4' style={{padding: 40}}>{questions[currQuestion].question}</Typography>
+            <div style={{ width: '100%', height: '30%' }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={6} className={classes.questionGrid}>
+                        <Card className={classes.questionCard}>
+                            <Button className={classes.questionText} onClick={() => handleClick(questions[currQuestion].answers[2])}>{questions[currQuestion].answers[2]}</Button>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={6} className={classes.questionGrid}>
+                        <Card className={classes.questionCard}>
+                            <Button className={classes.questionText} onClick={() => handleClick(questions[currQuestion].answers[3])}>{questions[currQuestion].answers[3]}</Button>
+                        </Card>
+                    </Grid>
+                </Grid>
+            </div>
+            </>
             : ''}
         </div>
     );
