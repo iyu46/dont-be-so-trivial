@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import data from './api.json';
+import { getTriviaQuestions } from '../../Helper';
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -17,52 +17,52 @@ const useStyles = makeStyles(theme => ({
       },
 }));
 
-// Returns an integer random number between min (included) and max (included):
-function randomInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
 function Quickstarter(props) {
     const classes = useStyles();
-    const [questions, setQuestions] = useState(data.results);
-    const displayQuestions = [];
+    const [questions, setQuestions] = useState([]);
+    const [currQuestion, setCurrQuestion] = useState(0);
 
     const handleClick = (item) => {
-        if (item === displayQuestions[0].correct_answer) {
+        if (item === questions[currQuestion].correct_answer) {
             console.log("correct");
+            // TODO: Send to server to record points
         } else {
             console.log("incorrect");
         }
-    }
-
-    // const fakeFetchQuestions = () => {
-    //     try {
-    //         import('./api.json').then(query => {
-    //             setQuestions(query);
-    //         });
-    //     } catch(err) {};
-    // }
-
-    const populateDisplayQuestions = () => {
-        var startingIndex = randomInteger(0, 9); // generate index between 0 - 9
-        displayQuestions[0] = questions[startingIndex];
-        if (questions[startingIndex].incorrect_answers.length === 3) {
-            var randomInsertIndex = randomInteger(0, 2);
-            displayQuestions[0].answers = displayQuestions[0].incorrect_answers;
-            displayQuestions[0].answers.splice(randomInsertIndex, 0, displayQuestions[0].correct_answer);
+        // TODO: This will need to be set either on a countdown or when all answers have been received from the players
+        if (currQuestion < questions.length - 1) {
+            setCurrQuestion(currQuestion + 1);
         }
+        
     }
 
-    populateDisplayQuestions();
+    const populateDisplayQuestions = async () => {
+        var response = await getTriviaQuestions({ numQuestions: 4 });
+        console.log(response)
+        if (response.data.response_code !== 0) {
+            // TODO: Handle error codes
+            console.log('Error retrieving questions from the API');
+        }
+        var results = response.data.results;
+        setQuestions(results);
+        
+    }
+    useEffect(() => {
+        populateDisplayQuestions();
+    }, []);
 
     return (
         <div>
-                {displayQuestions[0].question}
-                {displayQuestions[0].answers.map( (item) => {
+            { questions.length > 0 ?
+            <div>
+                { questions[currQuestion].question }
+                {questions[currQuestion].answers.map((ans, i) => {
                     return (
-                        <Button variant="contained" onClick={() => handleClick(item)}>{item}</Button>
-                )})}
-                {displayQuestions[0].correct_answer}
+                        <Button variant="contained" key={i} onClick={() => handleClick(ans)}>{ans}</Button>
+                    )
+                })}
+                </div>
+            : ''}
         </div>
     );
 }
