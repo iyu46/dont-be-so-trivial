@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
+using MySQL.Data.EntityFrameworkCore;
 
 namespace TriviaGame
 {
+    using TriviaGame.Models;
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -20,14 +23,15 @@ namespace TriviaGame
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllersWithViews();
-
+            //services.AddSingleton<IConfiguration>(Configuration);
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/build";
             });
+            services.AddDbContext<TriviaDbContext>(options =>
+                options.UseMySQL(Configuration.GetConnectionString("DbConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +40,14 @@ namespace TriviaGame
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                using (var serviceScope = app.ApplicationServices.CreateScope())
+                {
+                    var context = serviceScope.ServiceProvider.GetService<TriviaDbContext>();
+                    //context.Database.EnsureDeleted();
+                    //context.Database.EnsureCreated();
+                    // Seed the database.
+                    SeedData(context);
+                }
             }
             else
             {
@@ -66,6 +78,19 @@ namespace TriviaGame
                 //    spa.UseReactDevelopmentServer(npmScript: "start");
                 //}
             });
+        }
+
+        private static void SeedData(TriviaDbContext context)
+        {
+            // Deletes the database
+            context.Database.EnsureDeleted();
+            // Creates the database fresh
+            context.Database.EnsureCreated();
+
+            // Seed Models
+
+            // Saves changes
+            context.SaveChanges();
         }
     }
 }
