@@ -1,4 +1,6 @@
 import axios from 'axios';
+
+const BASE_URL = 'https://localhost:44302';
 // Open Trivia DB Categories
 const categories = {
     'General Knowledge': 9,
@@ -30,14 +32,15 @@ const categories = {
 
 // Open Trivia API Calls
 const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='multiple'}) => {
-    var url = `https://opentdb.com/api.php?amount=${numQuestions}`;
+    //var url = `https://opentdb.com/api.php?amount=${numQuestions}`;
+    var url = `${BASE_URL}/api/Quickstarter/Get?numQuestions=${numQuestions}`
     if (category && categories[category]) {
         url += `&category=${categories[category]}`;
     }
     if (difficulty) {
         url += `&difficulty=${difficulty}`;
     }
-    url += `&type=${type}&encode=url3986`;
+    //url += `&type=${type}&encode=url3986`;
     var response = await axios.get(url);
 
     // TODO: This will be done on the server side and return a DTO

@@ -10,7 +10,7 @@ namespace TriviaGame.Models
         public string Id { get; set; }
         public User[] Players { get; set; }
         public int GamePhase { get; set; }
-        public QuestionInterface[] QuestionSet { get; set; }
+        //public  QuestionSet { get; set; }
 
     }
 }

@@ -14,16 +14,23 @@ namespace TriviaGame.Models
         public TriviaDbContext(DbContextOptions<TriviaDbContext> options) : base(options)
         {
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            // optionsBuilder.UseMySQL(_configuration.GetConnectionString["DbConnection"]);
-            
-        }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
-        //    //base.OnModelCreating modelBuilder;
+        //    base.OnModelCreating modelBuilder;
 
-        //    //modelBuilder.Entity<
+        //    modelBuilder.Entity<Publisher>(entity =>
+        //    {
+        //        entity.HasKey(e => e.ID);
+        //        entity.Property(e => e.Name).IsRequired();
+        //    });
+
+        //    modelBuilder.Entity<Book>(entity =>
+        //    {
+        //        entity.HasKey(e => e.ISBN);
+        //        entity.Property(e => e.Title).IsRequired();
+        //        entity.HasOne(d => d.Publisher)
+        //          .WithMany(p => p.Books);
+        //    });
         //}
     }
 }

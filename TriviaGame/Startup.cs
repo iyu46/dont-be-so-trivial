@@ -10,6 +10,8 @@ using MySQL.Data.EntityFrameworkCore;
 
 namespace TriviaGame
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using TriviaGame.Models;
     public class Startup
     {
@@ -23,7 +25,8 @@ namespace TriviaGame
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            //services.AddControllersWithViews();
+            services.AddControllers();
             //services.AddSingleton<IConfiguration>(Configuration);
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -64,19 +67,21 @@ namespace TriviaGame
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
 
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                //if (env.IsDevelopment())
-                //{
-                //    spa.UseReactDevelopmentServer(npmScript: "start");
-                //}
+                if (env.IsDevelopment())
+                {
+                    // spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                }
             });
         }
 
@@ -88,6 +93,16 @@ namespace TriviaGame
             context.Database.EnsureCreated();
 
             // Seed Models
+            //var qq1 = new QuickstarterQuestion()
+            //{
+            //    Id = 1,
+            //    Category = "Science",
+            //    Difficulty = "easy",
+            //    Question = "What does CPU stand for?",
+            //    CorrectAnswer = "Central Processing Unit",
+            //    Answers =@"[""Central Process Unit"", ""Computer Personal Unit"", ""Central Processor Unit"", ""Central Processing Unit""]"
+            //};
+            //context.QuickstarterQuestions.Add(qq1);
 
             // Saves changes
             context.SaveChanges();

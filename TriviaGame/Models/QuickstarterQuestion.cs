@@ -10,9 +10,10 @@ namespace TriviaGame.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Category { get; set; }
+        public string Topic { get; set; }
         public string Difficulty { get; set; }
         public string Question { get; set; }
         public string CorrectAnswer { get; set; }
-        public ICollection<string> Answers { get; set; }
+        public string Answers { get; set; }
     }
 }
