@@ -31,7 +31,7 @@ namespace TriviaGame.Controllers
                 Difficulty = question.Difficulty,
                 Question = question.Question,
                 Answers = question.Answers
-            }
+            };
         }
 
         /*[HttpPost]
