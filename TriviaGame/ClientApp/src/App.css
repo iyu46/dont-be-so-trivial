@@ -2,6 +2,31 @@
   text-align: center;
 }
 
+.App::after {
+  content: "";
+  opacity: 0.8;
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.4)
+  ), url(img/abstract-599.svg) no-repeat fixed top;
+  /* also change the blend mode to what suits you, from darken, to other 
+  many options as you deem fit*/
+  background-size: 70%;
+  background-repeat: repeat;
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: -1;
+  min-height: 100vh;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -14,8 +39,7 @@
 }
 
 .App-header {
-  background: rgb(143, 59, 122);
-  background: radial-gradient(circle at center, rgb(143, 59, 122) 0%, rgba(0,0,0,1) 100%);
+  box-shadow: inset 0px 0px 5em 4em rgba(0,0,0,1);
   min-height: 100vh;
   display: flex;
   flex-direction: column;

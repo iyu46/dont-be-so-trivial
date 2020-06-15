@@ -35,6 +35,16 @@ namespace TriviaGame
             });
             services.AddDbContext<TriviaDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("DbConnection")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000",
+                                            "https://localhost:44302");
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +72,8 @@ namespace TriviaGame
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 

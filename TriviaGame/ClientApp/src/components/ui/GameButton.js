@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Card } from '@material-ui/core';
+import { Button, Card, Paper } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -16,27 +16,32 @@ const useStyles = makeStyles(theme => ({
       },
     questionText: {
         height: '100%',
-        width: '100%'
+        width: '100%',
+        color: "white",
+        borderRadius: '0px',
+        textShadow: '0px 0px 5px black',
+        fontSize: '0.925rem',
+        transition: "background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
     },
     questionCard: {
         height: '150px',
         width: '100%',
-        background: "radial-gradient(circle at center, rgb(2, 204, 204) 0%, rgba(255,255,255,1) 100%)",
+        background: "linear-gradient(90deg, rgba(3,252,248,1) 0%, rgba(0,138,251,1) 100%)",
     },
     disabledQuestionCard: {
         height: '150px',
         width: '100%',
-        background: "radial-gradient(circle at center, rgb(2, 204, 204) 0%, rgba(255,255,255,0.5) 100%)",
+        background: "linear-gradient(90deg, rgba(3,252,248,1) 0%, rgba(0,138,251,1) 100%)",
     },
     correctQuestionCard: {
         height: '150px',
         width: '100%',
-        background: "radial-gradient(circle at center, green 0%, rgba(255,255,255,1) 100%)",
+        background: "radial-gradient(circle, rgb(3,252,48,1) 0%, rgba(0,88,33,1) 100%)",
     },
     wrongQuestionCard: {
         height: '150px',
         width: '100%',
-        background: "radial-gradient(circle at center, red 0%, rgba(255,255,255,1) 100%)",
+        background: "radial-gradient(circle, rgba(248,3,3,1) 0%, rgba(88,0,0,1) 100%)",
     },
 }));
 
@@ -98,9 +103,9 @@ function GameButton(props) {
 
     return (
         <div>
-            <Card className={cardClass}>
+            <Paper className={cardClass}>
                 <Button className={classes.questionText} onClick={(e) => onClick(e)}>{buttonText}</Button>
-            </Card>
+            </Paper>
         </div>
     );
 }

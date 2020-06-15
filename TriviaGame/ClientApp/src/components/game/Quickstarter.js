@@ -24,12 +24,8 @@ const useStyles = makeStyles(theme => ({
     },
     questionText: {
         height: '100%',
-        width: '100%'
-    },
-    correctQuestionCard: {
-        height: '100%',
         width: '100%',
-        backgroundColor: 'green'
+        textShadow: '0px 0px 5px black',
     }
 }));
 
