@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TriviaGame.Models;
+using TriviaGame.Models.DTOs;
 
 namespace TriviaGame.Controllers
 {
@@ -20,9 +21,17 @@ namespace TriviaGame.Controllers
         }
 
         [HttpGet("Get")]
-        public QuickstarterQuestion Get([FromQuery]string category, [FromQuery]int numQuestions, [FromQuery]string difficulty)
+        public QuickstarterDTO Get([FromQuery]string category, [FromQuery]int numQuestions, [FromQuery]string difficulty)
         {
-            return this.context.QuickstarterQuestions.FirstOrDefault(r => r.Id == 1);
+            var question = this.context.QuickstarterQuestions.FirstOrDefault(r => r.Id == 1);
+            return new QuickstarterDTO()
+            {
+                Id = question.Id,
+                Category = question.Category,
+                Difficulty = question.Difficulty,
+                Question = question.Question,
+                Answers = question.Answers
+            }
         }
 
         /*[HttpPost]
