@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Card, Typography } from '@material-ui/core';
-import { getTriviaQuestions, getCategoryOptions } from '../../Helper';
+import { getTriviaQuestions, getCategoryOptions, checkAnswer } from '../../Helper';
 import GameButton from '../ui/GameButton';
 
 const useStyles = makeStyles(theme => ({
@@ -41,27 +41,29 @@ function decodeEntities(text) {
 
 function Quickstarter(props) {
     const classes = useStyles();
+    const [questionsReady, setQuestionsReady] = useState(false);
     const [questions, setQuestions] = useState([]);
     const [currQuestion, setCurrQuestion] = useState(0);
     const [showAnswer, setShowAnswer] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(-1);
 
-    const handleClick = (ansIndex) => {
+    const handleClick = async (ansIndex) => {
+        var response = await checkAnswer(questions[currQuestion].answers[ansIndex], questions[currQuestion].id);
         setShowAnswer(true);
-        setCorrectAnswer((questions[currQuestion].answers.indexOf(decodeEntities(questions[currQuestion].correct_answer))));
+        // setCorrectAnswer((questions[currQuestion].answers.indexOf(decodeEntities(questions[currQuestion].correct_answer))));
 
-        // console.table(questions);
-        // console.log("currque:" + currQuestion);
-        console.log("correct:" + correctAnswer);
-        console.log("question: " + decodeEntities(questions[currQuestion].answers[ansIndex]));
-        console.log("answer: " + decodeEntities(questions[currQuestion].correct_answer));
+        // // console.table(questions);
+        // // console.log("currque:" + currQuestion);
+        // console.log("correct:" + correctAnswer);
+        // console.log("question: " + decodeEntities(questions[currQuestion].answers[ansIndex]));
+        // console.log("answer: " + decodeEntities(questions[currQuestion].correct_answer));
 
-        if (decodeEntities(questions[currQuestion].answers[ansIndex]) === decodeEntities(questions[currQuestion].correct_answer)) {
-            console.log("correct");
-            // TODO: Send to server to record points
-        } else {
-            console.log("incorrect");
-        }
+        // if (decodeEntities(questions[currQuestion].answers[ansIndex]) === decodeEntities(questions[currQuestion].correct_answer)) {
+        //     console.log("correct");
+        //     // TODO: Send to server to record points
+        // } else {
+        //     console.log("incorrect");
+        // }
         // TODO: This will need to be set either on a countdown or when all answers have been received from the players
         if (currQuestion < questions.length - 1) {
             setTimeout(() => {
@@ -74,15 +76,16 @@ function Quickstarter(props) {
     }
 
     const populateDisplayQuestions = async () => {
-        var response = await getTriviaQuestions({ numQuestions: 4 });
+        var response = await getTriviaQuestions({ category: "Entertainment", numQuestions: 4, difficulty: "medium" });
         console.log(response)
-        if (response.data.response_code !== 0) {
-            // TODO: Handle error codes
-            console.log('Error retrieving questions from the API');
-        }
-        var results = response.data.results;
-        setQuestions(results);
-        
+        // if (response.data.response_code !== 0) {
+        //     // TODO: Handle error codes
+        //     console.log('Error retrieving questions from the API');
+        // }
+        // var results = response.data.results;
+        //setQuestions(results);
+        setQuestions(response);
+        setQuestionsReady(true);
     }
 
 
@@ -94,9 +97,22 @@ function Quickstarter(props) {
         //return () => clearInterval(tick)
     })*/
     useEffect(() => {
-        populateDisplayQuestions();
-
-    }, []);
+        const populateDisplayQuestions = async () => {
+            var response = await getTriviaQuestions({ category: "Entertainment", numQuestions: 4, difficulty: "medium" });
+            console.log(response)
+            // if (response.data.response_code !== 0) {
+            //     // TODO: Handle error codes
+            //     console.log('Error retrieving questions from the API');
+            // }
+            // var results = response.data.results;
+            //setQuestions(results);
+            setQuestions(response);
+            setQuestionsReady(true);
+        }
+        if (!questionsReady) {
+            populateDisplayQuestions()
+        }
+    }, [questionsReady]);
 
     return (
         <div>

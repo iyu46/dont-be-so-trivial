@@ -88,7 +88,7 @@ namespace TriviaGame
         private static void SeedData(TriviaDbContext context)
         {
             // Deletes the database
-            context.Database.EnsureDeleted();
+            //context.Database.EnsureDeleted();
             // Creates the database fresh
             context.Database.EnsureCreated();
 
