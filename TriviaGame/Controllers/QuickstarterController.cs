@@ -69,8 +69,6 @@ namespace TriviaGame.Controllers
         [HttpGet("Check")]
         public string Check([FromQuery] int id) 
         {
-            // doesn't work even though it should, says question is null and throws a nullpointerexception because of question.CorrectAnswer
-            // im too tired its 2:56am
             var question = this.context.QuickstarterQuestions.FirstOrDefault(r => r.Id == id);
             return question.CorrectAnswer;
         }

@@ -49,7 +49,9 @@ function Quickstarter(props) {
 
     const handleClick = async (ansIndex) => {
         var response = await checkAnswer(questions[currQuestion].answers[ansIndex], questions[currQuestion].id);
+        setCorrectAnswer((questions[currQuestion].answers.indexOf(decodeEntities(response))));
         setShowAnswer(true);
+
         // setCorrectAnswer((questions[currQuestion].answers.indexOf(decodeEntities(questions[currQuestion].correct_answer))));
 
         // // console.table(questions);

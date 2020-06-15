@@ -64,9 +64,8 @@ const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='m
 
 const checkAnswer = async (answer, id) => {
     var url = `${BASE_URL}/api/Quickstarter/Check?id=${id}`;
-    var response = await axios.post(url);
-    console.log(response);
-    return (response.data === answer);
+    var response = await axios.get(url);
+    return (response.data);
 }
 
 // Returns an integer random number between min (included) and max (included):
