@@ -1,7 +1,9 @@
 # dont-be-so-trivial
-Trivia minigames made multiplayer with React.js and C#.
+Trivia minigames made multiplayer - play with your friends online!
 
-Written using React.js (JavaScript, HTML, CSS), C#, and uses the Material UI library.
+Written using React.js (JavaScript, HTML, CSS) served by ASP.NET Core + Entity Framework Core (C#), with SignalR managing real time events.
+
+Uses the Material UI library and graphics from Loading.io.
 
 Trivia questions are sourced from the [Open Trivia Database](https://opentdb.com/) under the Attribution-ShareAlike 4.0 International license.
 

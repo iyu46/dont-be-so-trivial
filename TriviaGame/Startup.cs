@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using MySQL.Data.EntityFrameworkCore;
+using TriviaGame.Hubs;
 
 namespace TriviaGame
 {
@@ -35,6 +36,8 @@ namespace TriviaGame
             });
             services.AddDbContext<TriviaDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("DbConnection")));
+
+            services.AddSignalR();
 
             services.AddCors(options =>
             {
@@ -83,6 +86,7 @@ namespace TriviaGame
                 //    name: "default",
                 //    pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
 
             app.UseSpa(spa =>

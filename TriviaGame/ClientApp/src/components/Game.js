@@ -3,6 +3,7 @@ import { Grid, Card, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import GrabBag from './game/GrabBag';
 import Quickstarter from './game/Quickstarter';
+import Chatbox from './Chatbox';
 import { getSessionMembers } from '../Helper';
 
 const useStyles = makeStyles(theme => ({
@@ -43,7 +44,10 @@ function Game(props) {
                     <Grid item xs={3} key={i}>
                         <Card>{player}</Card>
                     </Grid>
-                )}
+                    )}
+                <Grid item xs={3} key={"dab"}>
+                    <Chatbox />
+                </Grid>
             </Grid>
         </div>
     );
