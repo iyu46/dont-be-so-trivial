@@ -4,7 +4,11 @@
   "libraries": [
     {
       "library": "@microsoft/signalr@latest",
-      "destination": "lib/signalr/"
+      "destination": "lib/signalr/",
+      "files": [
+        "dist/browser/signalr.js",
+        "dist/browser/signalr.min.js"
+      ]
     }
   ]
 }
