@@ -73,21 +73,6 @@ function Quickstarter(props) {
         
     }
 
-    const populateDisplayQuestions = async () => {
-        var response = await getTriviaQuestions({ category: "Entertainment", numQuestions: 4, difficulty: "medium" });
-        console.log(response)
-        // if (response.data.response_code !== 0) {
-        //     // TODO: Handle error codes
-        //     console.log('Error retrieving questions from the API');
-        // }
-        // var results = response.data.results;
-        //setQuestions(results);
-        setQuestions(response);
-        setQuestionsReady(true);
-    }
-
-
-
     /*useEffect(() => {
         const tick = setTimeout(() => {
             populateDisplayQuestions();
@@ -96,7 +81,7 @@ function Quickstarter(props) {
     })*/
     useEffect(() => {
         const populateDisplayQuestions = async () => {
-            var response = await getTriviaQuestions({ category: "Entertainment", numQuestions: 4, difficulty: "medium" });
+            var response = await getTriviaQuestions({ category: "Entertainment", numQuestions: 4, difficulty: "easy" });
             console.log(response)
             // if (response.data.response_code !== 0) {
             //     // TODO: Handle error codes

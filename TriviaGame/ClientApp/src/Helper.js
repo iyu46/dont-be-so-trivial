@@ -46,20 +46,6 @@ const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='m
         response.data[i].answers = JSON.parse(response.data[i].answers);
     }
     return response.data;
-
-    // TODO: This will be done on the server side and return a DTO
-    // var results = response.data.results;
-    // for (var i = 0; i < results.length; i++) {
-    //     results[i].question = decodeURIComponent(results[i].question);
-    //     results[i].answers = [];
-    //     var randomInsertIndex = randomInteger(0, 2);
-    //     for (var j = 0; j < results[i].incorrect_answers.length; j++) {
-    //         results[i].answers.push(decodeURIComponent(results[i].incorrect_answers[j]));
-    //     }
-    //     results[i].answers.splice(randomInsertIndex, 0, decodeURIComponent(results[i].correct_answer));
-    // }
-    // response.data.results = results;
-    // return Promise.resolve(response);
 }
 
 const checkAnswer = async (answer, id) => {
@@ -81,11 +67,19 @@ const getCategoryOptions = (numOptions) => {
     return options;
 }
 
+const generateRoom = async () => {
+    var url = `${BASE_URL}/api/Session/Generate`;
+    var response = await axios.get(url);
+    return response.data;
+}
 // Mock API helper functions
 const joinRoom = async (name, room) => {
     //call server, try to add person to room
     console.log(`[JOINING ROOM] Name: ${name}, Room code: ${room}`);
-    return Promise.resolve({status: 200, data: {}});
+    var url = `${BASE_URL}/api/Session/Join`;
+    var newUser = { SessionId: room, Name: name };
+    var response = await axios.post(url, newUser);
+    return response
 }
 
 const getSessionMembers = async (room) => {
@@ -107,6 +101,7 @@ export {
     getTriviaQuestions,
     checkAnswer,
     getCategoryOptions,
+    generateRoom,
     joinRoom,
     getSessionMembers
 };

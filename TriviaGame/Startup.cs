@@ -26,9 +26,10 @@ namespace TriviaGame
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllersWithViews();
-            services.AddControllers();
-            //services.AddSingleton<IConfiguration>(Configuration);
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -44,7 +45,10 @@ namespace TriviaGame
                 options.AddPolicy("CorsPolicy",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000",
+                        builder.AllowCredentials()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader()
+                               .WithOrigins("http://localhost:3000",
                                             "https://localhost:44302");
                     });
             });
@@ -104,21 +108,131 @@ namespace TriviaGame
         private static void SeedData(TriviaDbContext context)
         {
             // Deletes the database
-            //context.Database.EnsureDeleted();
+            context.Database.EnsureDeleted();
             // Creates the database fresh
             context.Database.EnsureCreated();
 
             // Seed Models
-            //var qq1 = new QuickstarterQuestion()
-            //{
-            //    Id = 1,
-            //    Category = "Science",
-            //    Difficulty = "easy",
-            //    Question = "What does CPU stand for?",
-            //    CorrectAnswer = "Central Processing Unit",
-            //    Answers =@"[""Central Process Unit"", ""Computer Personal Unit"", ""Central Processor Unit"", ""Central Processing Unit""]"
-            //};
-            //context.QuickstarterQuestions.Add(qq1);
+            var qq1 = new QuickstarterQuestion()
+            {
+                Id = 1,
+                Category = "Science",
+                Difficulty = "easy",
+                Question = "What does CPU stand for?",
+                CorrectAnswer = "Central Processing Unit",
+                Answers = @"[""Central Process Unit"", ""Computer Personal Unit"", ""Central Processor Unit"", ""Central Processing Unit""]"
+            };
+            var qq2 = new QuickstarterQuestion()
+            {
+                Id = 2,
+                Category = "Science",
+                Difficulty = "easy",
+                Question = "What is the longest bone in the human body?",
+                CorrectAnswer = "Femur",
+                Answers = @"[""Scapula"", ""Femur"", ""Fibula"", ""Ulna""]"
+            };
+            var qq3 = new QuickstarterQuestion()
+            {
+                Id = 3,
+                Category = "Science",
+                Difficulty = "easy",
+                Question = "The element involved in making human blood red is which of the following?",
+                CorrectAnswer = "Iron",
+                Answers = @"[""Copper"", ""Iridium"", ""Cobalt"", ""Iron""]"
+            };
+            var qq4 = new QuickstarterQuestion()
+            {
+                Id = 4,
+                Category = "Science",
+                Difficulty = "easy",
+                Question = "The biggest distinction between a eukaryotic cell and a prokaryotic cell is:",
+                CorrectAnswer = "The presence or absence of a nucleus",
+                Answers = @"[""The presence or absence of certain organelles"", ""The overall size"", ""The presence or absence of a nucleus"", ""The mode of reproduction""]"
+            };
+            var qq5 = new QuickstarterQuestion()
+            {
+                Id = 5,
+                Category = "General Knowledge",
+                Difficulty = "easy",
+                Question = "What type of animal was Harambe, who was shot after a child fell into it's enclosure at the Cincinnati Zoo?",
+                CorrectAnswer = "Gorilla",
+                Answers = @"[""Gorilla"", ""Tiger"", ""Panda"", ""Crocodile""]"
+            };
+            var qq6 = new QuickstarterQuestion()
+            {
+                Id = 6,
+                Category = "General Knowledge",
+                Difficulty = "easy",
+                Question = "Which candy is NOT made by Mars?",
+                CorrectAnswer = "Almond Joy",
+                Answers = @"[""Snickers"", ""M&M's"", ""Almond Joy"", ""Twix""]"
+            };
+            var qq7 = new QuickstarterQuestion()
+            {
+                Id = 7,
+                Category = "General Knowledge",
+                Difficulty = "easy",
+                Question = "The Flag of the European Union has how many stars on it?",
+                CorrectAnswer = "12",
+                Answers = @"[""10"", ""12"", ""14"", ""16""]"
+            };
+            var qq8 = new QuickstarterQuestion()
+            {
+                Id = 8,
+                Category = "General Knowledge",
+                Difficulty = "easy",
+                Question = "What is the Zodiac symbol for Gemini?",
+                CorrectAnswer = "Twins",
+                Answers = @"[""Fish"", ""Maiden"", ""Twins"", ""Scales""]"
+            };
+            var qq9 = new QuickstarterQuestion()
+            {
+                Id = 9,
+                Category = "Entertainment",
+                Difficulty = "easy",
+                Question = "What is the homeworld of the Elites from Halo?",
+                CorrectAnswer = "Sanghelios",
+                Answers = @"[""Te"", ""Sanghelios"", ""Dosaic"", ""Eayn""]"
+            };
+            var qq10 = new QuickstarterQuestion()
+            {
+                Id = 10,
+                Category = "Entertainment",
+                Difficulty = "easy",
+                Question = "What is the name of the world that the MMO RuneScape takes place in?",
+                CorrectAnswer = "Gielinor",
+                Answers = @"[""Glindor"", ""Zaros"", ""Azeroth"", ""Gielinor""]"
+            };
+            var qq11 = new QuickstarterQuestion()
+            {
+                Id = 11,
+                Category = "Entertainment",
+                Difficulty = "easy",
+                Question = "What is the name of the game developer who created Call Of Duty: Zombies?",
+                CorrectAnswer = "Treyarch",
+                Answers = @"[""Sledgehammer Games"", ""Treyarch"", ""Infinity Ward"", ""Activision""]"
+            };
+            var qq12 = new QuickstarterQuestion()
+            {
+                Id = 12,
+                Category = "Entertainment",
+                Difficulty = "easy",
+                Question = "Who is the creator of the Super Smash Bros. Series?",
+                CorrectAnswer = "Masahiro Sakurai",
+                Answers = @"[""Masahiro Sakurai"", ""Reggie Fils-Aime"", ""Bill Trinen"", ""Hideo Kojima""]"
+            };
+            context.QuickstarterQuestions.Add(qq1);
+            context.QuickstarterQuestions.Add(qq2);
+            context.QuickstarterQuestions.Add(qq3);
+            context.QuickstarterQuestions.Add(qq4);
+            context.QuickstarterQuestions.Add(qq5);
+            context.QuickstarterQuestions.Add(qq6);
+            context.QuickstarterQuestions.Add(qq7);
+            context.QuickstarterQuestions.Add(qq8);
+            context.QuickstarterQuestions.Add(qq9);
+            context.QuickstarterQuestions.Add(qq10);
+            context.QuickstarterQuestions.Add(qq11);
+            context.QuickstarterQuestions.Add(qq12);
 
             // Saves changes
             context.SaveChanges();

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Redirect } from "react-router-dom";
+import { generateRoom } from "../../Helper";
+import Loading from "../Loading";
 
 function generate_random_string(string_length){
     let random_string = '';
@@ -14,18 +16,27 @@ function generate_random_string(string_length){
   }
 
 function GenerateRoom(props) {
-
+    const [roomCode, setRoomCode] = useState('');
     // !!! Check session list to make sure code doesn't exist, create a new session entry + claim the code, then redirect to code lobby !!!
     // let roomCodeGen;
     // do {
     //    roomCodeGen = generate_random_string(4);
     // } while (database.sessionExists(roomCodeGen));
-    let roomCodeGen = generate_random_string(4);
-    let redirectLink = "/room/" + roomCodeGen;
+    //let roomCodeGen = generate_random_string(4);
+    //let redirectLink = "/room/" + roomCodeGen;
+
+    const getRoom = async () => {
+        var response = await generateRoom();
+        setRoomCode("/room/" + response);
+    }
+
+    useEffect( () => {
+        getRoom();
+    }, []);
 
     return (
         <div>
-            <Redirect to={redirectLink}></Redirect>;
+        {roomCode ? <Redirect to={roomCode}></Redirect> : <Loading /> }
         </div>
     );
 }

@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TriviaGame.Models
+namespace TriviaGame.Models.DTOs
 {
-    public class User
+    public class UserDTO
     {
         public int Id { get; set; }
-        [ForeignKey("Session")]
-        public virtual string SessionId { get; set; }
-        public virtual Session Session { get; set; }
         public string Name { get; set; }
         public int Points { get; set; }
         public int CurrQuestionId { get; set; }

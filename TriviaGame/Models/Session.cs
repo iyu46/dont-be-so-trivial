@@ -8,9 +8,13 @@ namespace TriviaGame.Models
     public class Session
     {
         public string Id { get; set; }
-        public User[] Players { get; set; }
+        public ICollection<User> Users { get; set; }
         public int GamePhase { get; set; }
-        //public  QuestionSet { get; set; }
+
+        public Session()
+        {
+            this.Users = new List<User>();
+        }
 
     }
 }

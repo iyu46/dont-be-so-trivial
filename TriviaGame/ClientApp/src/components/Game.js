@@ -25,6 +25,7 @@ function Game(props) {
     const minigame = <Quickstarter/>;
     const [players, setPlayers] = useState([]);
     const roomCode = props.match.params.code;
+    const name = '';
 
     useEffect(() => {
         const fetchData = async (roomCode) => {
@@ -46,7 +47,7 @@ function Game(props) {
                     </Grid>
                     )}
                 <Grid item xs={3} key={"dab"}>
-                    <Chatbox />
+                    <Chatbox name={name} />
                 </Grid>
             </Grid>
         </div>

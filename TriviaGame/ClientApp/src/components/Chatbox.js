@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import * as signalR from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -23,36 +23,41 @@ function Chatbox(props) {
     const [messageLog, setMessageLog] = useState([]);
     const [hubConnection, setHubConnection] = useState(null);
     const [ready, setReady] = useState(false);
+    const [draw, setDraw] = useState(false);
 
-    const sendMessage = () => {
-        hubConnection.invoke('sendToAll', nick, message)
+    const sendMessage = async () => {
+        try {
+            await hubConnection.invoke('sendToAll', nick, message)
                                     .catch(err => console.error(err));
-      
+        } catch (err) {
+            console.error(err);
+        }
         setMessage('');
       };
 
     useEffect(() => {
-        if (!ready) {
-            const currNick = window.prompt('Your name:', 'Bicki');
+        const createHubConnection = async () => {
+            setNick(props.name);
 
-            const newConnection = new signalR.HubConnectionBuilder().withUrl("/chathub").build();
+            const newConnection = new HubConnectionBuilder().withUrl("https:/localhost:44302/chathub").build();
 
-            setNick(currNick);
+            try {
+                await newConnection.start()
+                                            .then(() => console.log('Connection started!'))
+                                            .catch(err => console.log('Error establishing connection'));
 
-            newConnection.start()
-                                        .then(() => console.log('Connection started!'))
-                                        .catch(err => console.log('Error establishing connection'));
-
-            newConnection.on('sendToAll', (nick, receivedMessage) => {
-                const text = `${nick}: ${receivedMessage}`;
-                const messages = messageLog;
-                messages.concat([text]);
-                setMessageLog(messages);
-            });
-
+                newConnection.on('sendToAll', (nick, receivedMessage) => {
+                    setMessageLog(m => [...m, `${nick}: ${receivedMessage}`]);
+                    console.table(messageLog);
+                });
+            } catch (err) {
+                alert(err);
+            }
             setHubConnection(newConnection);
-            setReady(true);
         }
+
+        createHubConnection();
+        setReady(true);
       }, [])
 
     return (
