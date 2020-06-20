@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+// import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnectionContext } from "../Context.js";
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -21,9 +22,9 @@ function Chatbox(props) {
     const [nick, setNick] = useState('');
     const [message, setMessage] = useState('');
     const [messageLog, setMessageLog] = useState([]);
-    const [hubConnection, setHubConnection] = useState(null);
+    //const [hubConnection, setHubConnection] = useState(null);
+    const { hubConnection, executeCommand } = useContext(HubConnectionContext);
     const [ready, setReady] = useState(false);
-    const [draw, setDraw] = useState(false);
 
     const sendMessage = async () => {
         try {
@@ -35,30 +36,42 @@ function Chatbox(props) {
         setMessage('');
       };
 
+    // useEffect(() => {
+    //     const createHubConnection = async () => {
+    //         setNick(props.name);
+
+    //         const newConnection = new HubConnectionBuilder().withUrl("https:/localhost:44302/gamehub").build();
+
+    //         try {
+    //             await newConnection.start()
+    //                                         .then(() => console.log('Connection started!'))
+    //                                         .catch(err => console.log('Error establishing connection'));
+
+    //             newConnection.on('sendToAll', (nick, receivedMessage) => {
+    //                 setMessageLog(m => [...m, `${nick}: ${receivedMessage}`]);
+    //                 console.table(messageLog);
+    //             });
+    //         } catch (err) {
+    //             alert(err);
+    //         }
+    //         setHubConnection(newConnection);
+    //     }
+
+    //     createHubConnection();
+    //     setReady(true);
+    //   }, [])
+
     useEffect(() => {
-        const createHubConnection = async () => {
-            setNick(props.name);
-
-            const newConnection = new HubConnectionBuilder().withUrl("https:/localhost:44302/chathub").build();
-
-            try {
-                await newConnection.start()
-                                            .then(() => console.log('Connection started!'))
-                                            .catch(err => console.log('Error establishing connection'));
-
-                newConnection.on('sendToAll', (nick, receivedMessage) => {
-                    setMessageLog(m => [...m, `${nick}: ${receivedMessage}`]);
-                    console.table(messageLog);
-                });
-            } catch (err) {
-                alert(err);
-            }
-            setHubConnection(newConnection);
+        try {
+            hubConnection.on('sendToAll', (nick, receivedMessage) => {
+                setMessageLog(m => [...m, `${nick}: ${receivedMessage}`]);
+                console.table(messageLog);
+        });
+        } catch (err) {
+            alert(err);
         }
-
-        createHubConnection();
-        setReady(true);
-      }, [])
+        executeCommand('updateWithEvent', hubConnection);
+    }, []);
 
     return (
         <div>

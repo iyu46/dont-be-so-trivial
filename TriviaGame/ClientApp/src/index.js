@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from "react-router-dom";
+import { HubConnectionProvider } from "./Context";
 
 ReactDOM.render(
   <React.StrictMode>
-      <Router basename='/dont-be-so-trivial/'>
-        <App />
-      </Router>
+      <HubConnectionProvider>
+        <Router basename='/dont-be-so-trivial/'>
+          <App />
+        </Router>
+      </HubConnectionProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

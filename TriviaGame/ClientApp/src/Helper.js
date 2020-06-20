@@ -1,4 +1,8 @@
+import { useContext } from 'react';
 import axios from 'axios';
+//import { useHubConnectionContext } from "./Context.js";
+
+// const { hubConnection, executeCommand } = useHubConnectionContext();
 
 const BASE_URL = 'https://localhost:44302';
 // Open Trivia DB Categories
@@ -79,22 +83,12 @@ const joinRoom = async (name, room) => {
     var url = `${BASE_URL}/api/Session/Join`;
     var newUser = { SessionId: room, Name: name };
     var response = await axios.post(url, newUser);
-    return response
+    return response;
 }
 
 const getSessionMembers = async (room) => {
-    // Get all current room members from server
-    console.log(`[GETTING MEMBERS] Room code: ${room}`);
-    return Promise.resolve({
-        status: 200,
-        data: {
-            value: [
-                'Nik',
-                'Siena',
-                'Filip'
-            ]
-        }
-    });
+    var response = await axios.get(`${BASE_URL}/api/Session/Get/${room}`);
+    return (response.data);
 }
 
 export {

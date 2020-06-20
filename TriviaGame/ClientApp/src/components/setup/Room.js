@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import { Input, InputLabel, InputAdornment, FormControl, TextField, Grid, Button } from '@material-ui/core';
+import React, {useState, useEffect, useContext} from 'react';
+import { Input, InputLabel, InputAdornment, FormControl, TextField, Grid, Button, Typography } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { joinRoom, getSessionMembers } from '../../Helper.js';
+import { UserContext, HubConnectionContext } from "../../Context.js";
 // import { Grid, Paper } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -34,9 +35,13 @@ const useStyles = makeStyles(theme => ({
 function Room(props) {
     const {code} = useParams();
     const classes = useStyles();
-    const [name, setName] = useState("");
+    const [name, setName] = useState('');
+    const { saveUser } = useContext(UserContext);
+    const { hubConnection, executeCommand } = useContext(HubConnectionContext);
     const [joined, setJoined] = useState(false);
-    const [sessionMembers, setSessionMembers] = useState([null, null, null, null]);
+    const [failed, setFailed] = useState('');
+    const [sessionMembers, setSessionMembers] = useState([{ name: '' }, { name: '' }, { name: '' }, {name: ''}]);
+
 
     const isNull = (element) => {
         return (element == null);
@@ -44,16 +49,29 @@ function Room(props) {
 
     const handleJoin = async (e) => {
         e.preventDefault();
-        var resp = await joinRoom(name, code);
+        saveUser(name);
+        try {
+            var resp = await joinRoom(name, code);
+        } catch (err) {
+            console.log(err);
+            console.log(err.response);
+            setFailed(err.response.data);
+        }
+        try {
+            await hubConnection.invoke('joinRoom', name, code)
+                .catch(err => console.error(err));
+        } catch (err) {
+            console.error(err);
+        }
         // TODO: Check if success
         console.log("joined");
-        console.table(resp);
-        var newMembers = sessionMembers;
+        //console.table(resp);
+        /*var newMembers = sessionMembers;
         for (var i = 0; i < resp.data.length; i++) {
             newMembers[newMembers.findIndex(isNull)] = resp.data[i].name;
         }
         console.log(newMembers);
-        setSessionMembers(newMembers);
+        setSessionMembers(newMembers);*/
         setJoined(true);
     }
 
@@ -73,44 +91,64 @@ function Room(props) {
 
     useEffect(() => {
         //console.log(sessionMembers);
-    }, [sessionMembers]);
+    }, []);
+
+    useEffect(() => {
+        const fetchUsers = async (roomCode) => {
+            try {
+                hubConnection.on('joinRoom', async (name, room) => {
+                    var members = await getSessionMembers(roomCode);
+                    setSessionMembers(members);
+                    //console.log(sessionMembers)
+                });
+            } catch (err) {
+                alert(err);
+            }
+        };
+        fetchUsers(code);
+        executeCommand('updateWithEvent', hubConnection);
+    }, []);
 
     return (
         <div>
             <Grid container spacing={2}>
-                <Grid item xs={6} className={classes.member}>{sessionMembers[0]}</Grid>
-                <Grid item xs={6} className={classes.member}>{sessionMembers[1]}</Grid>
+                <Grid item xs={6} className={classes.member}>{sessionMembers[0] ? sessionMembers[0].name : ''}</Grid>
+                <Grid item xs={6} className={classes.member}>{sessionMembers[1] ? sessionMembers[1].name : ''}</Grid>
             </Grid>
             <h1>Current game code is {code}</h1>
-            { !joined ?
-            <form onSubmit={handleJoin}>
-            {/* <FormControl className={classes.margin}>
-                <InputLabel htmlFor="input-username">Name</InputLabel>
-                <Input
-                    id="input-username"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-            </FormControl> */}
-            <FormControl className={classes.margin}>
-                <InputLabel htmlFor="input-username" className={classes.white}>Name</InputLabel>
-                <Input
-                    id="input-username"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    startAdornment={
-                        <InputAdornment position="start" className={classes.white}>
-                            <AccountCircle className={classes.white}/>
-                        </InputAdornment>
-                    }
-                />
-            </FormControl>
-            <Button variant="contained" type="submit">Join</Button>
-            </form>
-            : <Link to={"/game/" + code} className={classes.removeLinkStyling}><Button variant="contained" onClick={(e) => startGame(e)}>Start Game</Button></Link> }
+            {!joined ?
+                <form onSubmit={handleJoin}>
+                    {/* <FormControl className={classes.margin}>
+        <InputLabel htmlFor="input-username">Name</InputLabel>
+        <Input
+            id="input-username"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+        />
+    </FormControl> */}
+                    <FormControl className={classes.margin}>
+                        <InputLabel htmlFor="input-username" className={classes.white}>Name</InputLabel>
+                        <Input
+                            id="input-username"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            startAdornment={
+                                <InputAdornment position="start" className={classes.white}>
+                                    <AccountCircle className={classes.white} />
+                                </InputAdornment>
+                            }
+                        />
+                    </FormControl>
+                    <Button variant="contained" type="submit">Join</Button>
+                </form>
+                : !failed ?
+                <Link to={"/game/" + code} className={classes.removeLinkStyling}>
+                    <Button variant="contained" onClick={(e) => startGame(e)}>Start Game</Button>
+                </Link>
+                : <Typography>{failed}</Typography>}
             <Grid container spacing={2}>
-                <Grid item xs={6} className={classes.member}>{sessionMembers[2]}</Grid>
-                <Grid item xs={6} className={classes.member}>{sessionMembers[3]}</Grid>
+                <Grid item xs={6} className={classes.member}>{sessionMembers[2] ? sessionMembers[2].name : ''}</Grid>
+                <Grid item xs={6} className={classes.member}>{sessionMembers[3] ? sessionMembers[3].name : ''}</Grid>
             </Grid>
         </div>
     );

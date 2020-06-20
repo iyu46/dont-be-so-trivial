@@ -90,7 +90,7 @@ namespace TriviaGame
                 //    name: "default",
                 //    pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<GameHub>("/gamehub");
             });
 
             app.UseSpa(spa =>

@@ -32,8 +32,8 @@ namespace TriviaGame.Controllers
             return newSessionId;
         }
 
-        [HttpGet("Get")]
-        public IEnumerable<UserDTO> Get([FromQuery] string id)
+        [HttpGet("Get/{id}")]
+        public IEnumerable<UserDTO> Get(string id)
         {
             var dataSet = this.context.Users.Where(x => x.SessionId == id).Select(x =>
                 new UserDTO
@@ -45,24 +45,27 @@ namespace TriviaGame.Controllers
         }
 
         [HttpPost("Join")]
-        public ICollection<User> Join(User user) 
+        public IActionResult Join(User user) 
         {
             var existingSession = this.context.Sessions.Include(r => r.Users).FirstOrDefault(r => r.Id == user.SessionId);
             if (existingSession == null)
             {
                 // TODO: throw an exception here and remove result nonsense
+                return NotFound("Session does not exist");
             }
             if (existingSession.Users.Count == 4)
             {
                 // TODO: throw an exception here because room is full
+                return StatusCode(409, "This game room is already full");
             }
             if (existingSession.GamePhase > -1)
             {
                 // TODO: figure out what logic to do if the game is already underway and not in the lobby
+                return StatusCode(409, "This game is already in progress");
             }
             existingSession.Users.Add(user);
             this.context.SaveChanges();
-            return existingSession.Users.ToList();
+            return Ok(existingSession.Users.ToList());
         }
 
         private string GenerateSessionId()
