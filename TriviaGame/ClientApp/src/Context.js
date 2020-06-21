@@ -4,6 +4,7 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 const HubConnectionContext = React.createContext(null);
 export const UserContext = React.createContext({
     currName: '',
+    getUser: () => {},
     saveUser: () => {}
 });
 
@@ -30,7 +31,8 @@ export const HubConnectionProvider = ({ children, settings }) => {
     const [hubConnection, setHubConnection] = useState(null);
 
     const start = async () => {
-        const newConnection = new HubConnectionBuilder().withUrl("https:/localhost:44302/gamehub").build();
+        const newConnection = new HubConnectionBuilder().withUrl("http://localhost:5890/gamehub").build();
+        //const newConnection = new HubConnectionBuilder().withUrl("https:/localhost:44302/gamehub").build();
 
         try {
             await newConnection.start()

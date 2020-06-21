@@ -19,16 +19,16 @@ const useStyles = makeStyles(theme => ({
 
 function Chatbox(props) {
     const classes = useStyles();
-    const [nick, setNick] = useState('');
     const [message, setMessage] = useState('');
     const [messageLog, setMessageLog] = useState([]);
     //const [hubConnection, setHubConnection] = useState(null);
     const { hubConnection, executeCommand } = useContext(HubConnectionContext);
     const [ready, setReady] = useState(false);
+    const code = props.code;
 
     const sendMessage = async () => {
         try {
-            await hubConnection.invoke('sendToAll', nick, message)
+            await hubConnection.invoke('sendToRoom', props.name, message, code)
                                     .catch(err => console.error(err));
         } catch (err) {
             console.error(err);
@@ -63,9 +63,8 @@ function Chatbox(props) {
 
     useEffect(() => {
         try {
-            hubConnection.on('sendToAll', (nick, receivedMessage) => {
+            hubConnection.on('sendToRoom', (nick, receivedMessage, code) => {
                 setMessageLog(m => [...m, `${nick}: ${receivedMessage}`]);
-                console.table(messageLog);
         });
         } catch (err) {
             alert(err);

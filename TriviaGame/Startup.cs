@@ -49,6 +49,7 @@ namespace TriviaGame
                                .AllowAnyMethod()
                                .AllowAnyHeader()
                                .WithOrigins("http://localhost:3000",
+                                            "http://localhost:5890",
                                             "https://localhost:44302");
                     });
             });

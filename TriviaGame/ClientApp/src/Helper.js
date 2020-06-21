@@ -4,7 +4,8 @@ import axios from 'axios';
 
 // const { hubConnection, executeCommand } = useHubConnectionContext();
 
-const BASE_URL = 'https://localhost:44302';
+//const BASE_URL = 'https://localhost:44302';
+const BASE_URL = 'http://localhost:5890';
 // Open Trivia DB Categories
 const categories = {
     'General Knowledge': 9,
@@ -34,7 +35,40 @@ const categories = {
 
 };
 
-// Open Trivia API Calls
+const generateRoom = async () => {
+    var url = `${BASE_URL}/api/Session/Generate`;
+    var response = await axios.get(url);
+    return response.data;
+}
+
+const joinRoom = async (name, room) => {
+    //call server, try to add person to room
+    console.log(`[JOINING ROOM] Name: ${name}, Room code: ${room}`);
+    var url = `${BASE_URL}/api/Session/Join`;
+    var newUser = { SessionId: room, Name: name };
+    var response = await axios.post(url, newUser);
+    return response;
+}
+
+const incrementGamePhase = async (room) => {
+    var response = await axios.post(`${BASE_URL}/api/Session/IncrementGamePhase/${room}`);
+    console.log(`[GAME STATE] Room code ${room} has incremented their game phase to ${response.data}`);
+    return (response.data);
+}
+
+const getSessionMembers = async (room) => {
+    var response = await axios.get(`${BASE_URL}/api/Session/Get/${room}`);
+    return (response.data);
+}
+
+const getCategoryOptions = (numOptions) => {
+    var options = new Set();
+    while (options.size !== numOptions) {
+        options.add(Object.keys(categories).find(key => categories[key] === randomInteger(9, 32)));
+    }
+    return options;
+}
+
 const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='multiple'}) => {
     //var url = `https://opentdb.com/api.php?amount=${numQuestions}`;
     var url = `${BASE_URL}/api/Quickstarter/Get?numQuestions=${numQuestions}`
@@ -58,44 +92,20 @@ const checkAnswer = async (answer, id) => {
     return (response.data);
 }
 
+
+/* HELPERS */
+
 // Returns an integer random number between min (included) and max (included):
-function randomInteger(min, max) {
+const randomInteger = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const getCategoryOptions = (numOptions) => {
-    var options = new Set();
-    while (options.size !== numOptions) {
-        options.add(Object.keys(categories).find(key => categories[key] === randomInteger(9, 32)));
-    }
-    return options;
-}
-
-const generateRoom = async () => {
-    var url = `${BASE_URL}/api/Session/Generate`;
-    var response = await axios.get(url);
-    return response.data;
-}
-// Mock API helper functions
-const joinRoom = async (name, room) => {
-    //call server, try to add person to room
-    console.log(`[JOINING ROOM] Name: ${name}, Room code: ${room}`);
-    var url = `${BASE_URL}/api/Session/Join`;
-    var newUser = { SessionId: room, Name: name };
-    var response = await axios.post(url, newUser);
-    return response;
-}
-
-const getSessionMembers = async (room) => {
-    var response = await axios.get(`${BASE_URL}/api/Session/Get/${room}`);
-    return (response.data);
-}
-
 export {
-    getTriviaQuestions,
-    checkAnswer,
-    getCategoryOptions,
     generateRoom,
     joinRoom,
-    getSessionMembers
+    incrementGamePhase,
+    getSessionMembers,
+    getCategoryOptions,
+    getTriviaQuestions,
+    checkAnswer,
 };

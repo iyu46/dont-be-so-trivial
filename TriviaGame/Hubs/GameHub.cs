@@ -5,9 +5,9 @@ namespace TriviaGame.Hubs
 {
     public class GameHub : Hub
     {
-        public async Task SendToAll(string name, string message)
+        public async Task SendToRoom(string name, string message, string roomName)
         {
-            await Clients.All.SendAsync("sendToAll", name, message);
+            await Clients.Group(roomName).SendAsync("sendToRoom", name, message);
         }
 
         public async Task JoinRoom(string name, string roomName)
@@ -22,6 +22,11 @@ namespace TriviaGame.Hubs
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
             await Clients.Group(roomName).SendAsync("Send", $"{name} has left the room.");
+        }
+
+        public async Task StartGame(string roomName)
+        {
+            await Clients.GroupExcept(roomName, Context.ConnectionId).SendAsync("startGame");
         }
     }
 }

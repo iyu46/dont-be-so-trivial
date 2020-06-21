@@ -1,12 +1,12 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Input, InputLabel, InputAdornment, FormControl, TextField, Grid, Button, Typography } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from "react-router";
-import { Link } from "react-router-dom";
-import { joinRoom, getSessionMembers } from '../../Helper.js';
+import { withRouter } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+import { joinRoom, incrementGamePhase, getSessionMembers } from '../../Helper.js';
 import { UserContext, HubConnectionContext } from "../../Context.js";
-// import { Grid, Paper } from '@material-ui/core';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Input, InputLabel, InputAdornment, FormControl, Grid, Button, Typography, IconButton } from '@material-ui/core';
+import { AccountCircle, Assignment, AssignmentTurnedIn, Link, DoneOutline } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -30,26 +30,31 @@ const useStyles = makeStyles(theme => ({
         padding: 30,
         width: '50%',
         height: '30%',
+    },
+    copyButton: {
+        color: "white",
     }
 }));
 function Room(props) {
     const {code} = useParams();
     const classes = useStyles();
     const [name, setName] = useState('');
-    const { saveUser } = useContext(UserContext);
+    const { currName, saveUser } = useContext(UserContext);
     const { hubConnection, executeCommand } = useContext(HubConnectionContext);
     const [joined, setJoined] = useState(false);
     const [failed, setFailed] = useState('');
     const [sessionMembers, setSessionMembers] = useState([{ name: '' }, { name: '' }, { name: '' }, {name: ''}]);
+    const [copied, setCopied] = useState('');
+    const currentUrl = "http://localhost:3000" + props.location.pathname; // CHANGE THIS FOR DEPLOYMENT
 
-
-    const isNull = (element) => {
-        return (element == null);
+    const copyToClipboard = (e, action) => {
+        e.preventDefault();
+        if (!copied.includes(action))
+            setCopied(copied + action);
     }
 
     const handleJoin = async (e) => {
         e.preventDefault();
-        saveUser(name);
         try {
             var resp = await joinRoom(name, code);
         } catch (err) {
@@ -58,48 +63,44 @@ function Room(props) {
             setFailed(err.response.data);
         }
         try {
-            await hubConnection.invoke('joinRoom', name, code)
-                .catch(err => console.error(err));
+            await hubConnection.invoke('joinRoom', name, code);
         } catch (err) {
             console.error(err);
         }
-        // TODO: Check if success
-        console.log("joined");
-        //console.table(resp);
-        /*var newMembers = sessionMembers;
-        for (var i = 0; i < resp.data.length; i++) {
-            newMembers[newMembers.findIndex(isNull)] = resp.data[i].name;
-        }
-        console.log(newMembers);
-        setSessionMembers(newMembers);*/
         setJoined(true);
     }
 
-    const startGame = (e) => {
-        //console.log("started");
+    const startGame = async (e) => {
+        try {
+            await hubConnection.invoke('startGame', code);
+            var resp = await incrementGamePhase(code);
+            props.history.push(`/game/${code}`);
+        } catch (err) {
+            console.error(err.response.data);
+        }
     }
 
     useEffect(() => {
-        const fetchData = async (roomCode) => {
-            //setSessionMembers((await getSessionMembers(roomCode)).data.value);
-            //console.log(sessionMembers);
+        const fetchUsers = async (roomCode) => {
+            setJoined(true);
+            setSessionMembers(await getSessionMembers(roomCode));
         };
-
-        fetchData(code);
-        //console.log('fetched');
-    }, [code, joined]);
-
-    useEffect(() => {
-        //console.log(sessionMembers);
+        if (currName) {
+            fetchUsers(code);
+        }
     }, []);
 
     useEffect(() => {
         const fetchUsers = async (roomCode) => {
+            while (!hubConnection) {}
             try {
                 hubConnection.on('joinRoom', async (name, room) => {
-                    var members = await getSessionMembers(roomCode);
-                    setSessionMembers(members);
+                    setSessionMembers(await getSessionMembers(roomCode));
                     //console.log(sessionMembers)
+                });
+                hubConnection.on('startGame', async (room) => {
+                    console.log("signalr start");
+                    props.history.push(`/game/${code}`);
                 });
             } catch (err) {
                 alert(err);
@@ -107,6 +108,7 @@ function Room(props) {
         };
         fetchUsers(code);
         executeCommand('updateWithEvent', hubConnection);
+
     }, []);
 
     return (
@@ -115,25 +117,30 @@ function Room(props) {
                 <Grid item xs={6} className={classes.member}>{sessionMembers[0] ? sessionMembers[0].name : ''}</Grid>
                 <Grid item xs={6} className={classes.member}>{sessionMembers[1] ? sessionMembers[1].name : ''}</Grid>
             </Grid>
-            <h1>Current game code is {code}</h1>
+            <h1>
+            Current game code is {code}
+            {<CopyToClipboard text={code}>
+                <IconButton aria-label="copy code to clipboard" onClick={(e) => {copyToClipboard(e, "code")}} className={classes.copyButton}>
+                    {copied.includes("code") ? <AssignmentTurnedIn /> : <Assignment />}
+                </IconButton>
+            </CopyToClipboard>}
+            {<CopyToClipboard text={currentUrl}>
+                <IconButton aria-label="copy url to clipboard" onClick={(e) => {copyToClipboard(e, "url")}} className={classes.copyButton}>
+                    {copied.includes("url") ? <DoneOutline /> : <Link />}
+                </IconButton>
+            </CopyToClipboard>}
+            </h1>
             {!joined ?
                 <form onSubmit={handleJoin}>
-                    {/* <FormControl className={classes.margin}>
-        <InputLabel htmlFor="input-username">Name</InputLabel>
-        <Input
-            id="input-username"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-        />
-    </FormControl> */}
                     <FormControl className={classes.margin}>
                         <InputLabel htmlFor="input-username" className={classes.white}>Name</InputLabel>
                         <Input
                             id="input-username"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Player"
+                            onChange={(e) => { setName(e.target.value); saveUser(name); }}
                             startAdornment={
-                                <InputAdornment position="start" className={classes.white}>
+                                <InputAdornment position="start">
                                     <AccountCircle className={classes.white} />
                                 </InputAdornment>
                             }
@@ -142,9 +149,7 @@ function Room(props) {
                     <Button variant="contained" type="submit">Join</Button>
                 </form>
                 : !failed ?
-                <Link to={"/game/" + code} className={classes.removeLinkStyling}>
-                    <Button variant="contained" onClick={(e) => startGame(e)}>Start Game</Button>
-                </Link>
+                <Button variant="contained" onClick={(e) => startGame(e)}>Start Game</Button>
                 : <Typography>{failed}</Typography>}
             <Grid container spacing={2}>
                 <Grid item xs={6} className={classes.member}>{sessionMembers[2] ? sessionMembers[2].name : ''}</Grid>
@@ -154,4 +159,4 @@ function Room(props) {
     );
 }
 
-export default Room;
+export default withRouter(Room);

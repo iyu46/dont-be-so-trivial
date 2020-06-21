@@ -26,7 +26,7 @@ namespace TriviaGame.Controllers
         public string Generate()
         {
             var newSessionId = GenerateSessionId();
-            var newSession = new Session() { Id = newSessionId, Users = null, GamePhase = -1 };
+            var newSession = new Session() { Id = newSessionId, Users = null, GamePhase = 0 };
             this.context.Sessions.Add(newSession);
             this.context.SaveChanges();
             return newSessionId;
@@ -58,14 +58,31 @@ namespace TriviaGame.Controllers
                 // TODO: throw an exception here because room is full
                 return StatusCode(409, "This game room is already full");
             }
-            if (existingSession.GamePhase > -1)
+            if (existingSession.GamePhase > 0)
             {
                 // TODO: figure out what logic to do if the game is already underway and not in the lobby
                 return StatusCode(409, "This game is already in progress");
             }
+            if (existingSession.Users.Any(r => r.Name == user.Name))
+            {
+                return StatusCode(409, "Another user exists with that name already");
+            }
             existingSession.Users.Add(user);
             this.context.SaveChanges();
             return Ok(existingSession.Users.ToList());
+        }
+
+        [HttpPost("IncrementGamePhase/{id}")]
+        public IActionResult IncrementGamePhase(string id) 
+        {
+            var existingSession = this.context.Sessions.Where(r => r.Id == id).FirstOrDefault();
+            if (existingSession == null)
+            {
+                return NotFound("Tried to increment game phase on a session that doesn't exist, what the hell happened");
+            }
+            existingSession.GamePhase += 1;
+            this.context.SaveChanges();
+            return Ok();
         }
 
         private string GenerateSessionId()
