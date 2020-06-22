@@ -21,7 +21,6 @@ function JoinGame(props) {
     const { hubConnection, executeCommand } = useContext(HubConnectionContext);
     const { currName, saveUser } = useContext(UserContext);
 
-
     const handleJoin = async (e) => {
         e.preventDefault();
         var roomError = false;
@@ -47,6 +46,11 @@ function JoinGame(props) {
         }
     }
 
+    const validateRoomCode = (value) => {
+        var purged = value.replace(/[^A-Za-z]/ig, '').toUpperCase()
+        setRoom(purged);
+    }
+
     return (
         <div>
             <form onSubmit={handleJoin}>
@@ -55,7 +59,9 @@ function JoinGame(props) {
                 <Input
                 id="input-username"
                 value={currName}
+                placeholder="Player"
                 onChange={(e) => saveUser(e.target.value)}
+                inputProps={{ maxLength: 12 }}
                 startAdornment={
                     <InputAdornment position="start">
                     <AccountCircle />
@@ -68,7 +74,9 @@ function JoinGame(props) {
                 <Input
                 id="input-roomcode"
                 value={room}
-                onChange={(e) => setRoom(e.target.value)}
+                //onChange={(e) => {setRoom(e.target.value); console.log(e.target.value)}}
+                onChange={(e) => validateRoomCode(e.target.value)}
+                inputProps={{ maxLength: 4 }}
                 startAdornment={
                     <InputAdornment position="start">
                     <MeetingRoom />

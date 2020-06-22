@@ -38,11 +38,6 @@ export const HubConnectionProvider = ({ children, settings }) => {
             await newConnection.start()
                 .then(() => console.log('Connection started!'))
                 .catch(err => console.log('Error establishing connection'));
-
-            // newConnection.on('sendToAll', (nick, receivedMessage) => {
-            //     setMessageLog(m => [...m, `${nick}: ${receivedMessage}`]);
-            //     console.table(messageLog);
-            // });
         } catch (err) {
             alert(err);
         }

@@ -32,7 +32,6 @@ const categories = {
     'Gadgets': 30,
     'Japanese Anime & Manga': 31,
     'Cartoon & Animation': 32
-
 };
 
 const generateRoom = async () => {
@@ -71,6 +70,7 @@ const getCategoryOptions = (numOptions) => {
 
 const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='multiple'}) => {
     //var url = `https://opentdb.com/api.php?amount=${numQuestions}`;
+    // TODO: ADD SERVER SIDE VALIDATION FOR CATEGORY AND DIFFICULTY
     var url = `${BASE_URL}/api/Quickstarter/Get?numQuestions=${numQuestions}`
     if (category) {
         url += `&category=${category}`;
@@ -79,6 +79,15 @@ const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='m
         url += `&difficulty=${difficulty}`;
     }
     //url += `&type=${type}&encode=url3986`;
+    const validateCategory = new Set(categories.keys());
+    if (!validateCategory.has(category)) {
+        console.log(`category ${category} is not valid`);
+        return null;
+    }
+    if (!["easy", "normal", "hard"].includes(difficulty)) {
+        console.log(`difficulty ${difficulty} is not valid`);
+        return null;
+    }
     var response = await axios.get(url);
     for (var i = 0; i < numQuestions; i++) {
         response.data[i].answers = JSON.parse(response.data[i].answers);

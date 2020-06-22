@@ -10,7 +10,6 @@ namespace TriviaGame.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Route("[controller]/[action]")]
     public class QuickstarterController : ControllerBase
     {
         private readonly TriviaDbContext context;
@@ -31,29 +30,12 @@ namespace TriviaGame.Controllers
 
             // for now assume category and difficulty are always sent ffs
             // fetch list of possible questions, randomly generate numbers and pull elements from list
-            //var dataSet = this.context.QuickstarterQuestions.Where(r => FindSubsetInDatabase(r, category, difficulty)).ToList();
             var dataSet = this.context.QuickstarterQuestions.Where(r => (r.Category == category && r.Difficulty == difficulty)).ToList();
-
-            // ignore this
-            //List<int> hashSetAllocationList = Enumerable.Range(0, numQuestions).ToList();
-            //HashSet<int> hashSet = new HashSet<int>(hashSetAllocationList);
-            //hashSet.Clear();
 
             for (int i = 0; i < numQuestions; i++)
             {
                 Random rand = new Random();
                 int randValue = rand.Next(0, dataSet.Count);
-
-                // this too
-                //bool foundANewValue = false;
-
-                //while (!foundANewValue)
-                //{
-                //    if (!hashSet.Add(randValue))
-                //    {
-                //        randValue = rand.Next(0, dataSet.Count);
-                //    }
-                //}
 
                 QuickstarterQuestion question = dataSet.Skip(randValue).Take(1).First();
                 dataSet.RemoveAt(randValue);

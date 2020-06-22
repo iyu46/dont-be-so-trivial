@@ -33,29 +33,33 @@ namespace TriviaGame.Controllers
         }
 
         [HttpGet("Get/{id}")]
-        public IEnumerable<UserDTO> Get(string id)
+        //public IEnumerable<UserDTO> Get(string id)
+        public IActionResult Get(string id)
         {
+            if (!ValidateRoomCode(id)) return StatusCode(400, "Room code sent was malformed");
+
             var dataSet = this.context.Users.Where(x => x.SessionId == id).Select(x =>
                 new UserDTO
                 {
                     Id = x.Id,
                     Name = x.Name,
                 }).ToList();
-            return dataSet;
+            return Ok(dataSet);
         }
 
         [HttpPost("Join")]
         public IActionResult Join(User user) 
         {
+            if (!ValidateRoomCode(user.SessionId)) return StatusCode(400, "Room code sent was malformed");
+            if (!ValidateName(user.Name)) return StatusCode(400, "User name sent was malformed");
+
             var existingSession = this.context.Sessions.Include(r => r.Users).FirstOrDefault(r => r.Id == user.SessionId);
             if (existingSession == null)
             {
-                // TODO: throw an exception here and remove result nonsense
                 return NotFound("Session does not exist");
             }
             if (existingSession.Users.Count == 4)
             {
-                // TODO: throw an exception here because room is full
                 return StatusCode(409, "This game room is already full");
             }
             if (existingSession.GamePhase > 0)
@@ -75,6 +79,8 @@ namespace TriviaGame.Controllers
         [HttpPost("IncrementGamePhase/{id}")]
         public IActionResult IncrementGamePhase(string id) 
         {
+            if (!ValidateRoomCode(id)) return StatusCode(400, "Room code sent was malformed");
+
             var existingSession = this.context.Sessions.Where(r => r.Id == id).FirstOrDefault();
             if (existingSession == null)
             {
@@ -82,7 +88,7 @@ namespace TriviaGame.Controllers
             }
             existingSession.GamePhase += 1;
             this.context.SaveChanges();
-            return Ok();
+            return Ok(existingSession.GamePhase);
         }
 
         private string GenerateSessionId()
@@ -111,6 +117,16 @@ namespace TriviaGame.Controllers
 
 
             return sessionId.ToString();
+        }
+
+        private bool ValidateRoomCode(string id)
+        {
+            return id.All(char.IsLetter) && (id.Length == 4);
+        }
+        
+        private bool ValidateName(string name)
+        {
+            return name.All(c => char.IsLetterOrDigit(c) || c == '_');
         }
     }
 }

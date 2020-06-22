@@ -48,20 +48,6 @@ function Quickstarter(props) {
         setCorrectAnswer((questions[currQuestion].answers.indexOf(decodeEntities(response))));
         setShowAnswer(true);
 
-        // setCorrectAnswer((questions[currQuestion].answers.indexOf(decodeEntities(questions[currQuestion].correct_answer))));
-
-        // // console.table(questions);
-        // // console.log("currque:" + currQuestion);
-        // console.log("correct:" + correctAnswer);
-        // console.log("question: " + decodeEntities(questions[currQuestion].answers[ansIndex]));
-        // console.log("answer: " + decodeEntities(questions[currQuestion].correct_answer));
-
-        // if (decodeEntities(questions[currQuestion].answers[ansIndex]) === decodeEntities(questions[currQuestion].correct_answer)) {
-        //     console.log("correct");
-        //     // TODO: Send to server to record points
-        // } else {
-        //     console.log("incorrect");
-        // }
         // TODO: This will need to be set either on a countdown or when all answers have been received from the players
         if (currQuestion < questions.length - 1) {
             setTimeout(() => {
@@ -70,25 +56,12 @@ function Quickstarter(props) {
                 setCurrQuestion(currQuestion + 1);
             }, 3000);
         }
-        
     }
 
-    /*useEffect(() => {
-        const tick = setTimeout(() => {
-            populateDisplayQuestions();
-        }, 2000);
-        //return () => clearInterval(tick)
-    })*/
     useEffect(() => {
         const populateDisplayQuestions = async () => {
             var response = await getTriviaQuestions({ category: "Entertainment", numQuestions: 4, difficulty: "easy" });
             console.log(response)
-            // if (response.data.response_code !== 0) {
-            //     // TODO: Handle error codes
-            //     console.log('Error retrieving questions from the API');
-            // }
-            // var results = response.data.results;
-            //setQuestions(results);
             setQuestions(response);
             setQuestionsReady(true);
         }
@@ -104,15 +77,9 @@ function Quickstarter(props) {
             <div style={{ width: '100%', height: '30%'}}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        {/* <Card className={showAnswer && correctAnswer === 0 ? classes.correctQuestionCard : classes.questionCard}>
-                            <Button className={classes.questionText} onClick={() => handleClick(0)}>{questions[currQuestion].answers[0]}</Button>
-                        </Card> */}
                         <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={0} buttonText={questions[currQuestion].answers[0]} onClick={() => handleClick(0)}></GameButton>
                     </Grid>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        {/* <Card className={showAnswer && correctAnswer === 1 ? classes.correctQuestionCard : classes.questionCard}>
-                            <Button className={classes.questionText} onClick={() => handleClick(1)}>{questions[currQuestion].answers[1]}</Button>
-                        </Card> */}
                         <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={1} buttonText={questions[currQuestion].answers[1]} onClick={() => handleClick(1)}></GameButton>
                     </Grid>
                 </Grid>
@@ -121,15 +88,9 @@ function Quickstarter(props) {
             <div style={{ width: '100%', height: '30%' }}>
                 <Grid container spacing={2}>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        {/* <Card className={showAnswer && correctAnswer === 2 ? classes.correctQuestionCard : classes.questionCard}>
-                            <Button className={classes.questionText} onClick={() => handleClick(2)}>{questions[currQuestion].answers[2]}</Button>
-                        </Card> */}
                         <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={2} buttonText={questions[currQuestion].answers[2]} onClick={() => handleClick(2)}></GameButton>
                     </Grid>
                     <Grid item xs={6} className={classes.questionGrid}>
-                        {/* <Card className={showAnswer && correctAnswer === 3 ? classes.correctQuestionCard : classes.questionCard}>
-                            <Button className={classes.questionText} onClick={() => handleClick(3)}>{questions[currQuestion].answers[3]}</Button>
-                        </Card> */}
                         <GameButton correctAnswer={correctAnswer} showAnswer={showAnswer} buttonIndex={3} buttonText={questions[currQuestion].answers[3]} onClick={() => handleClick(3)}></GameButton>
                     </Grid>
                 </Grid>

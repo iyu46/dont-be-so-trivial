@@ -66,24 +66,6 @@ function GameButton(props) {
         }
     }
 
-    // useEffect( () => {
-    //     const determineCardClass = () => {
-    //         console.log(props)
-    //         console.log(selected)
-    //         if (showAnswer && correctAnswer === buttonIndex) {
-    //             setCardClass(classes.correctQuestionCard);
-    //         } else if (showAnswer && selected && (buttonIndex !== correctAnswer)) {
-    //             setCardClass(classes.wrongQuestionCard);
-    //         } else {
-    //             setCardClass(classes.questionCard);
-    //         }
-    //     }
-    //     if (selected) {
-    //         determineCardClass();
-    //         setSelected(false);
-    //     }
-    // }, [selected])
-
     const onClick = (e) => {
         if (showAnswer) return;
         setSelected(true);

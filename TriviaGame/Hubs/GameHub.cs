@@ -26,7 +26,7 @@ namespace TriviaGame.Hubs
 
         public async Task StartGame(string roomName)
         {
-            await Clients.GroupExcept(roomName, Context.ConnectionId).SendAsync("startGame");
+            await Clients.OthersInGroup(roomName).SendAsync("startGame");
         }
     }
 }

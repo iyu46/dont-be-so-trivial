@@ -55,19 +55,26 @@ function Room(props) {
 
     const handleJoin = async (e) => {
         e.preventDefault();
+        var roomError = false;
+        var connectionError = false;
         try {
-            var resp = await joinRoom(name, code);
+            await joinRoom(name, code);
         } catch (err) {
             console.log(err);
             console.log(err.response);
+            roomError = true;
             setFailed(err.response.data);
         }
         try {
             await hubConnection.invoke('joinRoom', name, code);
         } catch (err) {
             console.error(err);
+            connectionError = true;
         }
-        setJoined(true);
+        if (!roomError && !connectionError) {
+            setJoined(true);
+            setFailed('');
+        }
     }
 
     const startGame = async (e) => {
@@ -102,13 +109,13 @@ function Room(props) {
                     console.log("signalr start");
                     props.history.push(`/game/${code}`);
                 });
+                setSessionMembers(await getSessionMembers(roomCode));
             } catch (err) {
                 alert(err);
             }
         };
         fetchUsers(code);
         executeCommand('updateWithEvent', hubConnection);
-
     }, []);
 
     return (
@@ -130,7 +137,7 @@ function Room(props) {
                 </IconButton>
             </CopyToClipboard>}
             </h1>
-            {!joined ?
+            {(!joined) ?
                 <form onSubmit={handleJoin}>
                     <FormControl className={classes.margin}>
                         <InputLabel htmlFor="input-username" className={classes.white}>Name</InputLabel>
@@ -139,6 +146,7 @@ function Room(props) {
                             value={name}
                             placeholder="Player"
                             onChange={(e) => { setName(e.target.value); saveUser(name); }}
+                            inputProps={{ maxLength: 12 }}
                             startAdornment={
                                 <InputAdornment position="start">
                                     <AccountCircle className={classes.white} />
@@ -148,9 +156,8 @@ function Room(props) {
                     </FormControl>
                     <Button variant="contained" type="submit">Join</Button>
                 </form>
-                : !failed ?
-                <Button variant="contained" onClick={(e) => startGame(e)}>Start Game</Button>
-                : <Typography>{failed}</Typography>}
+                : <Button variant="contained" onClick={(e) => startGame(e)}>Start Game</Button>}
+                <Typography>{failed}</Typography>
             <Grid container spacing={2}>
                 <Grid item xs={6} className={classes.member}>{sessionMembers[2] ? sessionMembers[2].name : ''}</Grid>
                 <Grid item xs={6} className={classes.member}>{sessionMembers[3] ? sessionMembers[3].name : ''}</Grid>
