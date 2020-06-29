@@ -7,32 +7,14 @@ import axios from 'axios';
 //const BASE_URL = 'https://localhost:44302';
 const BASE_URL = 'http://localhost:5890';
 // Open Trivia DB Categories
-const categories = {
-    'General Knowledge': 9,
-    'Books': 10,
-    'Film': 11,
-    'Music': 12,
-    'Musicals & Plays': 13,
-    'Television': 14,
-    'Video Games': 15,
-    'Board Games': 16,
-    'Science and Nature': 17,
-    'Computers': 18,
-    'Mathematics': 19,
-    'Mythology': 20,
-    'Sports': 21,
-    'Geography': 22,
-    'History': 23,
-    'Politics': 24,
-    'Art': 25,
-    'Celebrities': 26,
-    'Animals': 27,
-    'Vehicles': 28,
-    'Comics': 29,
-    'Gadgets': 30,
-    'Japanese Anime & Manga': 31,
-    'Cartoon & Animation': 32
-};
+const categories = [
+    'General Knowledge',
+    // 'Arts & Literature',
+    'Entertainment',
+    'Science & Technology',
+    // 'Sports & Vehicles',
+    'World Knowledge'
+];
 
 const generateRoom = async () => {
     var url = `${BASE_URL}/api/Session/Generate`;
@@ -68,7 +50,12 @@ const getCategoryOptions = (numOptions) => {
     return options;
 }
 
-const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='multiple'}) => {
+const getGamePhase = async (room) => {
+    var response = await axios.get(`${BASE_URL}/api/Session/GetGamePhase/${room}`);
+    return (response.data);
+}
+
+const getQuickstarter = async ({category, numQuestions=1, difficulty, type='multiple'}) => {
     //var url = `https://opentdb.com/api.php?amount=${numQuestions}`;
     // TODO: ADD SERVER SIDE VALIDATION FOR CATEGORY AND DIFFICULTY
     var url = `${BASE_URL}/api/Quickstarter/Get?numQuestions=${numQuestions}`
@@ -79,20 +66,25 @@ const getTriviaQuestions = async ({category, numQuestions=1, difficulty, type='m
         url += `&difficulty=${difficulty}`;
     }
     //url += `&type=${type}&encode=url3986`;
-    const validateCategory = new Set(categories.keys());
-    if (!validateCategory.has(category)) {
-        console.log(`category ${category} is not valid`);
-        return null;
-    }
-    if (!["easy", "normal", "hard"].includes(difficulty)) {
-        console.log(`difficulty ${difficulty} is not valid`);
-        return null;
-    }
+    // const validateCategory = new Set(Object.keys(categories));
+    // if (!validateCategory.has(category)) {
+    //     console.log(`category ${category} is not valid`);
+    //     return null;
+    // }
+    // if (!["easy", "normal", "hard"].includes(difficulty)) {
+    //     console.log(`difficulty ${difficulty} is not valid`);
+    //     return null;
+    // }
     var response = await axios.get(url);
     for (var i = 0; i < numQuestions; i++) {
         response.data[i].answers = JSON.parse(response.data[i].answers);
     }
     return response.data;
+}
+
+const getQuestions = async (room) => {
+    var response = await axios.get(`${BASE_URL}/api/Session/GetCurrentQuestions/${room}`);
+    return (response.data);
 }
 
 const checkAnswer = async (answer, id) => {
@@ -110,11 +102,14 @@ const randomInteger = (min, max) => {
 }
 
 export {
+    categories,
     generateRoom,
     joinRoom,
     incrementGamePhase,
     getSessionMembers,
     getCategoryOptions,
-    getTriviaQuestions,
+    getQuickstarter,
+    getQuestions,
+    getGamePhase,
     checkAnswer,
 };

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TriviaGame.Models;
 using TriviaGame.Models.DTOs;
+using Newtonsoft.Json;
 
 namespace TriviaGame.Controllers
 {
@@ -43,6 +44,7 @@ namespace TriviaGame.Controllers
                 {
                     Id = x.Id,
                     Name = x.Name,
+                    Host = x.Host,
                 }).ToList();
             return Ok(dataSet);
         }
@@ -54,23 +56,25 @@ namespace TriviaGame.Controllers
             if (!ValidateName(user.Name)) return StatusCode(400, "User name sent was malformed");
 
             var existingSession = this.context.Sessions.Include(r => r.Users).FirstOrDefault(r => r.Id == user.SessionId);
+
             if (existingSession == null)
-            {
                 return NotFound("Session does not exist");
-            }
+
             if (existingSession.Users.Count == 4)
-            {
                 return StatusCode(409, "This game room is already full");
-            }
+
             if (existingSession.GamePhase > 0)
             {
                 // TODO: figure out what logic to do if the game is already underway and not in the lobby
                 return StatusCode(409, "This game is already in progress");
             }
+            if (existingSession.Users.Any(r => r.Id == user.Id))
+                return StatusCode(409, "You're already in this session!");
+
             if (existingSession.Users.Any(r => r.Name == user.Name))
-            {
                 return StatusCode(409, "Another user exists with that name already");
-            }
+
+            //if (existingSession.Users.Count == 0)
             existingSession.Users.Add(user);
             this.context.SaveChanges();
             return Ok(existingSession.Users.ToList());
@@ -89,6 +93,30 @@ namespace TriviaGame.Controllers
             existingSession.GamePhase += 1;
             this.context.SaveChanges();
             return Ok(existingSession.GamePhase);
+        }
+
+        [HttpGet("GetGamePhase/{id}")]
+        public IActionResult GetGamePhase(string id)
+        {
+            if (!ValidateRoomCode(id)) return StatusCode(400, "Room code sent was malformed");
+            var existingSession = this.context.Sessions.Where(r => r.Id == id).FirstOrDefault();
+            if (existingSession == null)
+            {
+                return NotFound("Session does not exist");
+            }
+            return Ok(existingSession.GamePhase);
+        }
+
+        [HttpGet("GetCurrentQuestions/{id}")]
+        public IActionResult GetCurrentQuestions(string id)
+        {
+            if (!ValidateRoomCode(id)) return StatusCode(400, "Room code sent was malformed");
+            var existingSession = this.context.Sessions.Where(r => r.Id == id).FirstOrDefault();
+            if (existingSession == null)
+            {
+                return NotFound("Session does not exist");
+            }
+            return Ok(JsonConvert.DeserializeObject<List<QuickstarterDTO>>(existingSession.CurrentQuestions));
         }
 
         private string GenerateSessionId()

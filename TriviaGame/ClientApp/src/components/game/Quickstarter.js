@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Grid, Card, Typography } from '@material-ui/core';
-import { getTriviaQuestions, getCategoryOptions, checkAnswer } from '../../Helper';
+import { getQuickstarter, getCategoryOptions, checkAnswer, categories, getQuestions } from '../../Helper';
 import GameButton from '../ui/GameButton';
+import { UserContext, HubConnectionContext } from "../../Context.js";
 
 const useStyles = makeStyles(theme => ({
     removeLinkStyling: {
@@ -35,13 +36,29 @@ function decodeEntities(text) {
     return str;
 }
 
+// function getRandomArrayElements(arr, count) {
+//     var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+//     while (i-- > min) {
+//         index = Math.floor((i + 1) * Math.random());
+//         temp = shuffled[index];
+//         shuffled[index] = shuffled[i];
+//         shuffled[i] = temp;
+//     }
+//     return shuffled.slice(min);
+// }
+
 function Quickstarter(props) {
     const classes = useStyles();
-    const [questionsReady, setQuestionsReady] = useState(false);
+    const [peopleReadyCount, setPeopleReadyCount] = useState(0);
     const [questions, setQuestions] = useState([]);
     const [currQuestion, setCurrQuestion] = useState(0);
     const [showAnswer, setShowAnswer] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(-1);
+    const { hubConnection, executeCommand } = useContext(HubConnectionContext);
+    const { currName } = useContext(UserContext);
+    const players = props.players;
+    const roomCode = props.roomCode;
+    const peopleNum = props.players.length;
 
     const handleClick = async (ansIndex) => {
         var response = await checkAnswer(questions[currQuestion].answers[ansIndex], questions[currQuestion].id);
@@ -58,17 +75,46 @@ function Quickstarter(props) {
         }
     }
 
+    // useEffect(() => {
+    //     const checkCanStart = async () => {
+    //         if (peopleReadyCount === peopleNum) {
+    //             var randomCategories = getRandomArrayElements(categories, 4);
+    //             console.log(randomCategories);
+    //             hubConnection.invoke('getQuickstarter', roomCode, JSON.stringify(randomCategories), "easy");
+    //             console.log("invoked");
+    //         }
+    //     };
+    //     if (players[0].name === currName) {
+    //         checkCanStart();
+    //     }
+    //     console.log(players);
+    //     console.log(peopleReadyCount);
+    //     console.log(peopleNum);
+    //     console.log(currName);
+    // }, [peopleReadyCount]);
+
     useEffect(() => {
-        const populateDisplayQuestions = async () => {
-            var response = await getTriviaQuestions({ category: "Entertainment", numQuestions: 4, difficulty: "easy" });
-            console.log(response)
-            setQuestions(response);
-            setQuestionsReady(true);
-        }
-        if (!questionsReady) {
-            populateDisplayQuestions()
-        }
-    }, [questionsReady]);
+        const fetchQuestions = async () => {
+            while (!hubConnection) {}
+            /*try {
+                hubConnection.on('getQuickstarter', async (questions) => {
+                    console.log("getting quickstarter questions");
+                    console.log(questions)
+                    setQuestions(questions);
+                });
+                hubConnection.on('userReady', async () => {
+                    console.log("i am ready")
+                    setPeopleReadyCount(peopleReadyCount + 1);
+                });
+            } catch (err) {
+                alert(err);
+            }*/
+            setQuestions(await getQuestions(roomCode));
+        };
+        fetchQuestions();
+        //executeCommand('updateWithEvent', hubConnection);
+        //hubConnection.invoke('userReady', roomCode);
+    }, []);
 
     return (
         <div>
