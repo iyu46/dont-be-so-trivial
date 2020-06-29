@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import GrabBag from './game/GrabBag';
 import Quickstarter from './game/Quickstarter';
 import Chatbox from './Chatbox';
-import { getSessionMembers } from '../Helper';
+import { getSessionMembers, getGamePhase } from '../Helper';
 import { UserContext } from "../Context";
 
 const useStyles = makeStyles(theme => ({
@@ -21,11 +21,18 @@ const useStyles = makeStyles(theme => ({
       },
 }));
 
+const minigames = [
+    () => "The game hasn't started yet...",
+    (props) => <Quickstarter {...props} />
+];
 function Game(props) {
     const classes = useStyles();
-    const minigame = <Quickstarter/>;
     const [players, setPlayers] = useState([{ name: '' }, { name: '' }, { name: '' }, {name: ''}]);
+    const [playersReady, setPlayersReady] = useState(false);
     const roomCode = props.match.params.code;
+    // const minigame = <Quickstarter players={players} roomCode={roomCode}/>;
+    const [minigame, setMinigame] = useState();
+    const [gamePhase, setGamePhase] = useState(-1);
     const { currName } = useContext(UserContext);
 
     useEffect(() => {
@@ -34,12 +41,30 @@ function Game(props) {
         };
 
         fetchData(roomCode);
-    }, [roomCode]);
+        setPlayersReady(true);
+    }, []);
+
+    useEffect(() => {
+        const getGameState = async (roomCode) => {
+            var gameState = await getGamePhase(roomCode);
+            setGamePhase(gameState);
+            /*if (gameState === -1) {
+                setMinigame('Error loading game');
+            } else {
+                console.log(players);
+                setMinigame(minigames[gameState]({players, roomCode}));
+            }*/
+        };
+
+        if (players[0].name !== '') {
+            getGameState(roomCode);
+        }
+    }, [players]);
 
     return (
         <div>
             <div style={{width: '80vw'}}>
-            {minigame}
+                {gamePhase !== -1 ? minigames[gamePhase]({ players, roomCode }) : 'Error loading game'}
             </div>
             <Grid container spacing={3}>
                 {players.map((player, i) => 

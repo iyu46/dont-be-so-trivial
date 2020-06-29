@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { useParams } from "react-router";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
-import { joinRoom, incrementGamePhase, getSessionMembers } from '../../Helper.js';
+import { joinRoom, incrementGamePhase, getSessionMembers, categories } from '../../Helper.js';
 import { UserContext, HubConnectionContext } from "../../Context.js";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Input, InputLabel, InputAdornment, FormControl, Grid, Button, Typography, IconButton } from '@material-ui/core';
@@ -35,6 +35,18 @@ const useStyles = makeStyles(theme => ({
         color: "white",
     }
 }));
+
+function getRandomArrayElements(arr, count) {
+    var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+    while (i-- > min) {
+        index =  Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
+    }
+    return shuffled.slice(min);
+}
+
 function Room(props) {
     const {code} = useParams();
     const classes = useStyles();
@@ -79,8 +91,13 @@ function Room(props) {
 
     const startGame = async (e) => {
         try {
-            await hubConnection.invoke('startGame', code);
             var resp = await incrementGamePhase(code);
+            await hubConnection.invoke('startGame', code);
+            var randomCategories = getRandomArrayElements(categories, 4);
+            console.log(randomCategories);
+            hubConnection.invoke('getQuickstarter', code, JSON.stringify(randomCategories), "easy");
+            console.log("invoked");
+            //await hubConnection.invoke('promptGetQuestions', code);
             props.history.push(`/game/${code}`);
         } catch (err) {
             console.error(err.response.data);
@@ -145,7 +162,7 @@ function Room(props) {
                             id="input-username"
                             value={name}
                             placeholder="Player"
-                            onChange={(e) => { setName(e.target.value); saveUser(name); }}
+                            onChange={(e) => { setName(e.target.value); saveUser(e.target.value); }}
                             inputProps={{ maxLength: 12 }}
                             startAdornment={
                                 <InputAdornment position="start">

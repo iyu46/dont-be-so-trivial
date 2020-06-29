@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TriviaGame.Models;
 using TriviaGame.Models.DTOs;
+using Newtonsoft.Json;
 
 namespace TriviaGame.Controllers
 {
@@ -43,7 +44,7 @@ namespace TriviaGame.Controllers
                                                      Category = question.Category,
                                                      Difficulty = question.Difficulty,
                                                      Question = question.Question,
-                                                     Answers = question.Answers });
+                                                     Answers = JsonConvert.DeserializeObject<List<string>>(question.Answers) });
             }
             return response;
         }

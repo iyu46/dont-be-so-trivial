@@ -117,7 +117,7 @@ namespace TriviaGame
             var qq1 = new QuickstarterQuestion()
             {
                 Id = 1,
-                Category = "Science",
+                Category = "Science & Technology",
                 Difficulty = "easy",
                 Question = "What does CPU stand for?",
                 CorrectAnswer = "Central Processing Unit",
@@ -126,7 +126,7 @@ namespace TriviaGame
             var qq2 = new QuickstarterQuestion()
             {
                 Id = 2,
-                Category = "Science",
+                Category = "Science & Technology",
                 Difficulty = "easy",
                 Question = "What is the longest bone in the human body?",
                 CorrectAnswer = "Femur",
@@ -135,7 +135,7 @@ namespace TriviaGame
             var qq3 = new QuickstarterQuestion()
             {
                 Id = 3,
-                Category = "Science",
+                Category = "Science & Technology",
                 Difficulty = "easy",
                 Question = "The element involved in making human blood red is which of the following?",
                 CorrectAnswer = "Iron",
@@ -144,7 +144,7 @@ namespace TriviaGame
             var qq4 = new QuickstarterQuestion()
             {
                 Id = 4,
-                Category = "Science",
+                Category = "Science & Technology",
                 Difficulty = "easy",
                 Question = "The biggest distinction between a eukaryotic cell and a prokaryotic cell is:",
                 CorrectAnswer = "The presence or absence of a nucleus",
@@ -222,18 +222,17 @@ namespace TriviaGame
                 CorrectAnswer = "Masahiro Sakurai",
                 Answers = @"[""Masahiro Sakurai"", ""Reggie Fils-Aime"", ""Bill Trinen"", ""Hideo Kojima""]"
             };
-            context.QuickstarterQuestions.Add(qq1);
-            context.QuickstarterQuestions.Add(qq2);
-            context.QuickstarterQuestions.Add(qq3);
-            context.QuickstarterQuestions.Add(qq4);
-            context.QuickstarterQuestions.Add(qq5);
-            context.QuickstarterQuestions.Add(qq6);
-            context.QuickstarterQuestions.Add(qq7);
-            context.QuickstarterQuestions.Add(qq8);
-            context.QuickstarterQuestions.Add(qq9);
-            context.QuickstarterQuestions.Add(qq10);
-            context.QuickstarterQuestions.Add(qq11);
-            context.QuickstarterQuestions.Add(qq12);
+            var qq13 = new QuickstarterQuestion()
+            {
+                Id = 13,
+                Category = "World Knowledge",
+                Difficulty = "easy",
+                Question = "Who is the creator of Filip Bicki?",
+                CorrectAnswer = "Poland",
+                Answers = @"[""Poland"", ""Reggie Fils-Aime"", ""Bill Trinen"", ""Hideo Kojima""]"
+            };
+            IList<QuickstarterQuestion> quickstarterQuestions = new List<QuickstarterQuestion>() { qq1, qq2, qq3, qq4, qq5, qq6, qq7, qq8, qq9, qq10, qq11, qq12, qq13 };
+            context.QuickstarterQuestions.AddRange(quickstarterQuestions);
 
             // Saves changes
             context.SaveChanges();

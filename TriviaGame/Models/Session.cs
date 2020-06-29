@@ -10,6 +10,7 @@ namespace TriviaGame.Models
         public string Id { get; set; }
         public ICollection<User> Users { get; set; }
         public int GamePhase { get; set; }
+        public string CurrentQuestions { get; set; }
 
         public Session()
         {

@@ -14,6 +14,7 @@ namespace TriviaGame.Models
         public virtual Session Session { get; set; }
         public string Name { get; set; }
         public int Points { get; set; }
+        public bool Host { get; set; }
         public int CurrQuestionId { get; set; }
         public string CurrQuestionAnswer { get; set; }
     }
